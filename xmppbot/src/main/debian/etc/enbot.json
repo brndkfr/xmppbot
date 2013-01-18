@@ -11,7 +11,7 @@
       "nickName" : "Enbot Botson",
       "multiUserChats" : {
         "example1" : "example1@examplehost.org",
-        "example2" : "example2@examplehost.org",
+        "example2" : "example2@examplehost.org"
       },
       "chats" : {
       }
