@@ -23,7 +23,7 @@
 	</licenses>
 	<organization>
 		<url>http://raion.de</url>
-		<name>Bernd Kiefer</name>
+		<name>Bernd Kiefer &lt;b.kiefer@raion.de&gt;</name>
 	</organization>
 
 	<scm>
@@ -94,6 +94,7 @@
 						<canUpdateDescription>true</canUpdateDescription>
 						<canUpdateCopyright>true</canUpdateCopyright>
 						<organizationName>${project.organization.name}</organizationName>
+						<inceptionYear>2012</inceptionYear>
 						<clearAfterOperation>true</clearAfterOperation>
 						<verbose>true</verbose>
 					</configuration>
