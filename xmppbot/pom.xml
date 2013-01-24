@@ -23,7 +23,7 @@
 		<!-- debian packaging properties -->
 		<deb.pkgname>enbot-botson</deb.pkgname>
 	</properties>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
