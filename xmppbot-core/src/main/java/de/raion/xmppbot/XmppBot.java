@@ -439,7 +439,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 				}
 
 			} catch (Exception e) {
-				log.error("Exception caught in joinChannels: " + e.getMessage(), e);
+				log.error("Exception caught in joinChannels for multiuserchat '{}' : {}", mucName, e.getMessage() );
 			}
 		}
 	}
