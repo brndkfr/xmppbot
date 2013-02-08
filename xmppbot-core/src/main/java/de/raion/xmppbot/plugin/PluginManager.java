@@ -19,14 +19,15 @@ package de.raion.xmppbot.plugin;
  * #L%
  */
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import net.dharwin.common.tools.cli.api.utils.CLIAnnotationDiscovereryListener;
 
@@ -51,10 +52,14 @@ public class PluginManager {
 	/** mapps all running plugins by their annotated name */
 	@SuppressWarnings("rawtypes")
 	protected Map<String, AbstractMessageListenerPlugin> plugins;
+	
+	private List<PluginStatusListener> statusListenerList;
 
-	private TreeMap<String, Boolean> pluginStatusMap;
+	//private TreeMap<String, Boolean> pluginStatusMap;
 
 	private XmppContext context;
+
+	private PluginConfig pluginConfig;
 
 	/**
 	 *
@@ -62,15 +67,41 @@ public class PluginManager {
 	 */
 	public PluginManager(XmppContext aContext) {
 		context = aContext;
-		pluginStatusMap = new TreeMap<String, Boolean>();
+		//pluginStatusMap = new TreeMap<String, Boolean>();
+		statusListenerList = new ArrayList<PluginStatusListener>();
 		plugins = loadPlugins();
+		pluginConfig = aContext.loadConfig(PluginConfig.class);
 
-		Set<String> keySet = plugins.keySet();
-		for (String key : keySet) {
-			pluginStatusMap.put(key, Boolean.TRUE);
+		if(pluginConfig.isEmpty()) {
+			Set<String> keySet = plugins.keySet();
+			for (String key : keySet) {
+				//pluginStatusMap.put(key, Boolean.TRUE);
+				pluginConfig.setStatus(key, Boolean.TRUE);
+			}
+		} else {
+			Set<String> keySet = pluginConfig.keySet();
+			for (String pluginName : keySet) {
+				boolean state = pluginConfig.get(pluginName);
+				if(state == Boolean.TRUE) {
+					enablePlugin(pluginName);
+				}
+				if(state == Boolean.FALSE) {
+					disablePlugin(pluginName);
+				}
+			}
 		}
+		log.info(pluginConfig.toString());
+		
 	}
 
+	
+	public boolean addPluginStatusListener(PluginStatusListener aListener) {
+		return statusListenerList.add(aListener);
+	}
+	
+	public boolean removePluginStatusListener(PluginStatusListener aListener) {
+		return statusListenerList.remove(aListener);
+	}
 
 	@SuppressWarnings("rawtypes")
 	public Map<String, AbstractMessageListenerPlugin> getEnabledPlugins() {
@@ -99,8 +130,17 @@ public class PluginManager {
 	 * @return true if plugin is available and enabled, otherwise false
 	 * @see MessageListenerPlugin#name()
 	 */
+	@SuppressWarnings("unchecked")
 	public Boolean enablePlugin(String pluginName) {
-		return setPluginState(pluginName, Boolean.TRUE);
+		boolean enabled =  setPluginState(pluginName, Boolean.TRUE);
+		
+		if(enabled) {
+			for (PluginStatusListener listener : statusListenerList) {
+				listener.pluginEnabled(pluginName, plugins.get(pluginName));
+			}
+		}
+		
+		return enabled;
 	}
 
 	/**
@@ -109,8 +149,17 @@ public class PluginManager {
 	 * @return true if plugin is available and disabled, otherwise false
 	 * @see MessageListenerPlugin#name()
 	 */
+	@SuppressWarnings("unchecked")
 	public Boolean disablePlugin(String pluginName) {
-		return setPluginState(pluginName, Boolean.FALSE);
+		boolean disabled = setPluginState(pluginName, Boolean.FALSE);
+		
+		if(disabled) {
+			for (PluginStatusListener listener : statusListenerList) {
+				listener.pluginDisabled(pluginName, plugins.get(pluginName));
+			}
+		}
+		
+		return disabled;
 	}
 
 	/**
@@ -120,7 +169,7 @@ public class PluginManager {
 	 *
 	 */
 	public Map<String, Boolean> getStatusMap() {
-		return Collections.unmodifiableMap(pluginStatusMap);
+		return Collections.unmodifiableMap(pluginConfig.getStatusMap());
 
 	}
 
@@ -155,8 +204,14 @@ public class PluginManager {
 
 
 	private Boolean setPluginState(String key, Boolean state) {
-		if(pluginStatusMap.containsKey(key)) {
-			pluginStatusMap.put(key, state);
+		if(pluginConfig.containsKey(key)) {
+			pluginConfig.setStatus(key, state);
+			try {
+				context.saveConfig(pluginConfig);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
@@ -168,10 +223,10 @@ public class PluginManager {
 
 		Map<String, AbstractMessageListenerPlugin> map = new HashMap<String, AbstractMessageListenerPlugin>();
 
-		Set<String> keySet = pluginStatusMap.keySet();
+		Set<String> keySet = pluginConfig.keySet();
 
 		for (String key : keySet) {
-			if(pluginStatusMap.get(key).equals(state)) {
+			if(pluginConfig.get(key).equals(state)) {
 				map.put(key, plugins.get(key));
 			}
 		}
