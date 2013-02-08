@@ -88,7 +88,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	private Map<String, Chat> chatMap;
 	private HashMap<MultiUserChat, Set<String>> multiUserChatPresenceMap;
 	private ChatMessageListener messageHandler;
-	private Map<String, Class<PacketInterceptor>> packetInterceptorMap;
+	private Map<String, List<Class<PacketInterceptor>>> packetInterceptorMap;
 	private Map<String, Class<MultiUserChatListener>> multiUserChatListenerMap;
 
 	private BotConfiguration configuration;
@@ -406,11 +406,15 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 		for (String mucName : mucNameCollection) {
 			try {
 				if (packetInterceptorMap.containsKey(xmppConfig.getServiceType())) {
-					AbstractPacketInterceptor interceptor = (AbstractPacketInterceptor) packetInterceptorMap
-							.get(xmppConfig.getServiceType()).newInstance();
-
-					interceptor.setContext(getContext());
-					connection.addPacketInterceptor(interceptor, interceptor.getPacketFilter());
+					
+					List<Class<PacketInterceptor>> interceptorList = packetInterceptorMap.get(xmppConfig.getServiceType()); 
+					
+					for (Class<PacketInterceptor> interceptorClass : interceptorList) {
+						AbstractPacketInterceptor interceptor = (AbstractPacketInterceptor) interceptorClass.newInstance();
+						interceptor.setContext(getContext());
+						connection.addPacketInterceptor(interceptor, interceptor.getPacketFilter());
+					}
+					
 				}
 
 				// start TODO remove workareound handly of muclistener
@@ -445,7 +449,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	}
 
 
-	private Map<String, Class<PacketInterceptor>> loadPacketInterceptors() {
+	private HashMap<String, List<Class<PacketInterceptor>>> loadPacketInterceptors() {
 		Discoverer discoverer = new ClasspathDiscoverer();
 		CLIAnnotationDiscovereryListener discoveryListener = new CLIAnnotationDiscovereryListener(
 				new String[] { PacketInterceptor.class.getName() });
@@ -454,7 +458,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 		List<String> list = discoveryListener.getDiscoveredClasses();
 
-		HashMap<String, Class<PacketInterceptor>> map = new HashMap<String, Class<PacketInterceptor>>();
+		HashMap<String, List<Class<PacketInterceptor>>> map = new HashMap<String, List <Class<PacketInterceptor>>>();
 
 		for (String className : list) {
 			try {
@@ -463,7 +467,14 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 				PacketInterceptor annotation = clazz.getAnnotation(PacketInterceptor.class);
 
-				map.put(annotation.service().toLowerCase(), clazz);
+				if(map.containsKey(annotation.service().toLowerCase())) {
+					map.get(annotation.service().toLowerCase()).add(clazz);
+				} else {
+					ArrayList <Class<PacketInterceptor>> aList = new ArrayList <Class<PacketInterceptor>>();
+					aList.add(clazz);
+					map.put(annotation.service().toLowerCase(), aList);
+				}
+						
 
 			} catch (ClassNotFoundException e) {
 				log.error("loadPacketInterceptors()", e);

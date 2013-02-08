@@ -169,6 +169,9 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 		return "";
 	}
 
+	public boolean matches(String aString) {
+		return pattern.matcher(aString).find();
+	}
 
 	private void processMessage(XmppContext xmppContext, Message message) {
 
