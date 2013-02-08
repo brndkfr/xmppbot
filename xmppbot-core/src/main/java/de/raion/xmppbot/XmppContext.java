@@ -88,6 +88,7 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 	public void init() {
 
 		pluginManager = new PluginManager(this);
+		pluginManager.addPluginStatusListener(xmppBot);
 
 		final Collection<String> cmdCollection = scheduleExecutor.getConfig().getSchedules().values();
 

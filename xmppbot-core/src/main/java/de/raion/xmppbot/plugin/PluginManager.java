@@ -20,6 +20,7 @@ package de.raion.xmppbot.plugin;
  */
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,6 +52,8 @@ public class PluginManager {
 	/** mapps all running plugins by their annotated name */
 	@SuppressWarnings("rawtypes")
 	protected Map<String, AbstractMessageListenerPlugin> plugins;
+	
+	private List<PluginStatusListener> statusListenerList;
 
 	private TreeMap<String, Boolean> pluginStatusMap;
 
@@ -63,6 +66,7 @@ public class PluginManager {
 	public PluginManager(XmppContext aContext) {
 		context = aContext;
 		pluginStatusMap = new TreeMap<String, Boolean>();
+		statusListenerList = new ArrayList<PluginStatusListener>();
 		plugins = loadPlugins();
 
 		Set<String> keySet = plugins.keySet();
@@ -71,6 +75,14 @@ public class PluginManager {
 		}
 	}
 
+	
+	public boolean addPluginStatusListener(PluginStatusListener aListener) {
+		return statusListenerList.add(aListener);
+	}
+	
+	public boolean removePluginStatusListener(PluginStatusListener aListener) {
+		return statusListenerList.remove(aListener);
+	}
 
 	@SuppressWarnings("rawtypes")
 	public Map<String, AbstractMessageListenerPlugin> getEnabledPlugins() {
@@ -99,8 +111,17 @@ public class PluginManager {
 	 * @return true if plugin is available and enabled, otherwise false
 	 * @see MessageListenerPlugin#name()
 	 */
+	@SuppressWarnings("unchecked")
 	public Boolean enablePlugin(String pluginName) {
-		return setPluginState(pluginName, Boolean.TRUE);
+		boolean enabled =  setPluginState(pluginName, Boolean.TRUE);
+		
+		if(enabled) {
+			for (PluginStatusListener listener : statusListenerList) {
+				listener.pluginEnabled(pluginName, plugins.get(pluginName));
+			}
+		}
+		
+		return enabled;
 	}
 
 	/**
@@ -109,8 +130,17 @@ public class PluginManager {
 	 * @return true if plugin is available and disabled, otherwise false
 	 * @see MessageListenerPlugin#name()
 	 */
+	@SuppressWarnings("unchecked")
 	public Boolean disablePlugin(String pluginName) {
-		return setPluginState(pluginName, Boolean.FALSE);
+		boolean disabled = setPluginState(pluginName, Boolean.FALSE);
+		
+		if(disabled) {
+			for (PluginStatusListener listener : statusListenerList) {
+				listener.pluginDisabled(pluginName, plugins.get(pluginName));
+			}
+		}
+		
+		return disabled;
 	}
 
 	/**

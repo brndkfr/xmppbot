@@ -23,7 +23,9 @@ package de.raion.xmppbot;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -133,8 +135,12 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 			Collection<XMPPConnection> connections = connectionMap.values();
 
+			Collection<AbstractMessageListenerPlugin> plugins = getContext().getPluginManager()
+                                                                            .getEnabledPlugins()
+                                                                            .values();
+			
 			for (XMPPConnection connection : connections) {
-				addPlugins(connection);
+				addPlugins(connection, plugins);
 			}
 		}
 		catch(Exception e) {
@@ -362,11 +368,9 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	}
 
 
-	private XMPPConnection addPlugins(XMPPConnection connection) {
+	private XMPPConnection addPlugins(XMPPConnection connection, Collection<AbstractMessageListenerPlugin> plugins) {
 
-		Collection<AbstractMessageListenerPlugin> plugins = getContext().getPluginManager()
-				                                                        .getEnabledPlugins()
-				                                                        .values();
+		
 		// excluding messages from enbot himself :)
 		List<String> nickNameList = getOwnNickNames();
 		List<NotFilter> notFromFilterList = new ArrayList<NotFilter>();
@@ -552,12 +556,26 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	}
 
 	public <T> void pluginDisabled(String pluginName, AbstractMessageListenerPlugin<T> plugin) {
-		// TODO Auto-generated method stub
+		
+		Collection<XMPPConnection> connections = connectionMap.values();
+
+		for (XMPPConnection connection : connections) {
+			connection.removePacketListener(plugin);
+			log.info("plugin '{}' disabled for '{}'", pluginName, connection.toString());
+		}
 	}
 
 
 	public <T> void pluginEnabled(String pluginName, AbstractMessageListenerPlugin<T> plugin) {
-		// TODO Auto-generated method stub
+		
+		Collection<XMPPConnection> connections = connectionMap.values();
+		
+		Collection<AbstractMessageListenerPlugin> plugins = new ArrayList<AbstractMessageListenerPlugin>(1);
+		plugins.add(plugin);
+		
+		for (XMPPConnection connection : connections) {
+			addPlugins(connection, plugins);
+		}
 	}
 
 

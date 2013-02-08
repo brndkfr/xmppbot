@@ -19,6 +19,7 @@ package de.raion.xmppbot.command.core;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -59,6 +60,11 @@ public class PluginCommand extends AbstractXmppCommand {
 	@Parameter(names = { "-e", "-enable" }, description = "enables the plugins (-e name1 name2 ...)")
 	List<String> plugins2Enable;
 
+	
+	public PluginCommand() {
+		plugins2Disable = new ArrayList<String>();
+		plugins2Enable = new ArrayList<String>();
+	}
 
 	@Override
 	public void executeCommand(XmppContext context) {
@@ -74,7 +80,7 @@ public class PluginCommand extends AbstractXmppCommand {
 		}
 
 		if(plugins2Enable.size() > 0) {
-			enablePlugins(plugins2Disable, context);
+			enablePlugins(plugins2Enable, context);
 		}
 	}
 
@@ -95,7 +101,7 @@ public class PluginCommand extends AbstractXmppCommand {
 	private void disablePlugins(List<String> plugins2Disable2, XmppContext context) {
 		PluginManager pluginManager = context.getPluginManager();
 		for (String pluginName : plugins2Disable2) {
-			Boolean enabled = pluginManager.enablePlugin(pluginName);
+			Boolean enabled = pluginManager.disablePlugin(pluginName);
 			if(enabled) {
 				println(pluginName+" disabled");
 			} else {
