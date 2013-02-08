@@ -33,6 +33,8 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -269,6 +271,7 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 	public <T>T loadConfig(Class<T> aClass) {
 
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		try {
 			return mapper.readValue(new File(aClass.getSimpleName().toLowerCase()+".json"), aClass);
 		} catch (Exception  e) {
