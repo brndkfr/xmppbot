@@ -68,6 +68,8 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 	private JiraConfig config;
 
 	private Client client;
+	
+	private JsonNode issueNode;
 
 
 	/**
@@ -173,6 +175,11 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 		return pattern.matcher(aString).find();
 	}
 
+	/**
+	 * @return the last jsonnode fetched by the plugin, can be <code>null</code>
+	 */
+	public JsonNode getCurrentIssue() { return issueNode; }
+	
 	private void processMessage(XmppContext xmppContext, Message message) {
 
 		Matcher matcher = pattern.matcher(message.getBody());
@@ -188,7 +195,7 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 				ClientResponse response = client.resource(issueUri).get(ClientResponse.class);
 
 				if(response.getClientResponseStatus() == Status.OK) {
-					JsonNode issueNode = mapper.readValue(response.getEntityInputStream(), JsonNode.class);
+					issueNode = mapper.readValue(response.getEntityInputStream(), JsonNode.class);
 					String issueSummary = issueNode.findValue("summary").textValue();
 
 					StringBuilder builder = new StringBuilder();
