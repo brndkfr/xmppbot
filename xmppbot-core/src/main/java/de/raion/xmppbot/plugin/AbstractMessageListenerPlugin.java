@@ -38,7 +38,7 @@ import de.raion.xmppbot.io.ChatWriter;
 import de.raion.xmppbot.io.MultiUserChatWriter;
 
 /**
- * base class for MessageListenerPlugins. the class provides to correct
+ * base class for MessageListenerPlugins. the class provides the correct
  * context for the subclasses.
  * @param <T> type param
  */
@@ -94,8 +94,7 @@ public abstract class AbstractMessageListenerPlugin<T> implements PacketListener
 				}
 			};
 
-			Thread t = new Thread(runnable);
-			t.start();
+			xmppBot.getExecutorService().submit(runnable);
 		}
 	}
 

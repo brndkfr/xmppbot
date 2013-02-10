@@ -62,10 +62,9 @@ public class MentionNameHighlighterInterceptor extends
 
 	private void addNickNameHighlighting(Message message) {
 
-		if (getContext().getBot().getMultiUserChat(message.getTo()) != null) {
+		if (getContext().getMultiUserChat(message.getTo()) != null) {
 
-			Iterator<String> nicknameIterator = getContext().getBot()
-					.getMultiUserChat(message.getTo()).getOccupants();
+			Iterator<String> nicknameIterator = getContext().getMultiUserChat(message.getTo()).getOccupants();
 
 			String body = message.getBody();
 

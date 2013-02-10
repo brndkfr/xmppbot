@@ -275,7 +275,7 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 			return mapper.readValue(new File(aClass.getSimpleName().toLowerCase()+".json"), aClass);
 		} catch (Exception  e) {
 
-			log.error("loadConfig - {}", e.getMessage());
+			log.warn("loadConfig - {}", e.getMessage());
 			try {
 				return aClass.newInstance();
 			} catch (Exception e1) {
@@ -342,16 +342,41 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 		return pluginManager;
 	}
 
+	/**
+	 * @param mucName
+	 * @return MultiUserChat or <code>null</code> if not available
+	 */
+	public MultiUserChat getMultiUserChat(String mucName) {
+		return xmppBot.getMultiUserChat(mucName);
+	}
 
+	
+	/**
+	 * checks if Command command is available
+	 * @param command cmd
+	 * @return true if available otherwise false
+	 */
+	public boolean hasCommand(String command) {
+		return xmppBot.hasCommand(command);
+	}
 
-//	/**
-//	 * @return
-//	 */
-//	public <T extends AbstractMessageListenerPlugin> T  getPluginInstance(Class<? extends AbstractMessageListenerPlugin> pluginClass) {
-//		MessageListenerPlugin pluginAnnotation = pluginClass.getAnnotation(MessageListenerPlugin.class);
-//		return (T) xmppBot.pluginMap.get(pluginAnnotation.name().toLowerCase());
-//
-//	}
+	
+	/**
+	 * chat by name
+	 * @param participant user name
+	 * @return the chat or null if not available
+	 */
+	public Chat getChat(String participant) {
+		return xmppBot.getChat(participant);
+			
+	}
 
-
+	/**
+	 * processes a incoming command
+	 * @param cmdString the command as string
+	 */
+	public void processCommand(String cmdString) {
+		xmppBot.processCommand(cmdString);
+		
+	}
 }

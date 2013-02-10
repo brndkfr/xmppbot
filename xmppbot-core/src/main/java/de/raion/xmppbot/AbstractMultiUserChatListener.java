@@ -22,6 +22,8 @@ package de.raion.xmppbot;
 import static de.raion.xmppbot.util.PacketUtils.getFromAddress;
 
 import java.io.PrintWriter;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Message;
@@ -37,7 +39,7 @@ import de.raion.xmppbot.io.MultiUserChatWriter;
 /**
  * Abstract Class for listening to MultiUserChats with access to the XmppContext
  * of the Bot. Implementing PacketListener and Listening for incoming Packets.
- * Via {@link #accept(Message)} the Listener decides which Package to accept and
+ * Via {@link #accept(Message)} the Listener decides which Packets to accept and
  * to route on {@link #processMessage(MultiUserChat, Message)} or {@link #processPresence(MultiUserChat, Presence)}
  *
  *
@@ -49,13 +51,14 @@ public abstract class AbstractMultiUserChatListener implements PacketListener {
 
 	/** reference to the bot */
 	protected XmppBot xmppBot;
-
+		
 	/**
 	 * constructor
 	 * @param reference to the xmppbot
 	 */
 	public AbstractMultiUserChatListener(XmppBot reference) {
-		this.xmppBot = reference;
+		xmppBot = reference;
+		
 	}
 
 
@@ -123,8 +126,7 @@ public abstract class AbstractMultiUserChatListener implements PacketListener {
 
 
 		if(runnable != null) {
-			Thread t = new Thread(runnable);
-			t.start();
+			xmppBot.executorService.submit(runnable);
 		}
 
 

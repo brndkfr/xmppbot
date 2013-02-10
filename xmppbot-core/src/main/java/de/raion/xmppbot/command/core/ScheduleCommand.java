@@ -298,7 +298,7 @@ public class ScheduleCommand extends AbstractXmppCommand {
 
 
 	private boolean isCommandAvailable(XmppContext context) {
-		if (!context.getBot().hasCommand(command)) {
+		if (!context.hasCommand(command)) {
 			println("can't schedule, command '" + command + "' does not exist");
 			return false;
 		}

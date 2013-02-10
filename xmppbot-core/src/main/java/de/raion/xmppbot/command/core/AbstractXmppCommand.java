@@ -76,6 +76,8 @@ public abstract class AbstractXmppCommand extends Command<XmppContext> {
 	@Override
 	public  CommandResult execute(XmppContext context) {
 		try {
+			CLICommand commandAnnotation = this.getClass().getAnnotation(CLICommand.class);
+			log.info("executing {}", commandAnnotation.name());
 			return innerExecute(context);
 		}
 		catch (Exception e) {

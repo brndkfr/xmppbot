@@ -37,6 +37,21 @@ public class PacketUtils {
 	public static String getFromNick(final Packet aPacket) {
 		return getNick(aPacket.getFrom());
 	}
+	
+	public static String getToNick(final Packet aPacket) {
+		return getNick(aPacket.getTo());
+	}
+	
+	public static String getToName(Packet aPacket) {
+		return getName(aPacket.getTo());
+	}
+
+	private static String getName(String to) {
+		if(to == null)
+			return "";
+		
+		return to.substring(0, to.indexOf("@"));
+	}
 
 	public static String getNick(String wholeAddress) {
 
@@ -51,14 +66,9 @@ public class PacketUtils {
 		return "";
 	}
 
-	public static String getFromAddress(Packet aPacket) {
-
-
-		return getAddress(aPacket.getFrom());
-
-
-	}
-
+	public static String getFromAddress(Packet aPacket) { return getAddress(aPacket.getFrom());	}
+	
+	
 	private static String getAddress(String from) {
 		if(from != null) {
 			int index = from.lastIndexOf("/");

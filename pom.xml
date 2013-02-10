@@ -4,7 +4,7 @@
 	<groupId>de.raion.xmppbot</groupId>
 	<artifactId>xmppbot-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.6.0-SNAPSHOT</version>
+	<version>0.6.0</version>
 	<name>Enbot Botson</name>
 	<description>a xmppbot named Enbot</description>
 	<url>http://github.com/brndkfr/xmppbot</url>

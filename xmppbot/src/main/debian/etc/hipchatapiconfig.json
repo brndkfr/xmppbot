@@ -1,7 +1,6 @@
-package de.raion.xmppbot.plugin;
 /*
  * #%L
- * XmppBot Core
+ * XmppBot Install
  * %%
  * Copyright (C) 2012 - 2013 Bernd Kiefer <b.kiefer@raion.de>
  * %%
@@ -18,27 +17,12 @@ package de.raion.xmppbot.plugin;
  * limitations under the License.
  * #L%
  */
-
-
-
-/**
- * notifies about the status of a plugin
- *
- */
-public interface PluginStatusListener {
-
-	/**
-	 * called when the plugin manager disabled a plugin
-	 * @param pluginName shortname
-	 * @param plugin the plugin
-	 */
-	public <T> void pluginDisabled(String pluginName, AbstractMessageListenerPlugin<T> plugin);
-
-
-	/**
-	 * called when the plugin manager enabled a plugin
-	 * @param pluginName shortname
-	 * @param plugin the plugin
-	 */
-	public <T> void pluginEnabled(String pluginName, AbstractMessageListenerPlugin<T> plugin);
+{
+  "baseURL" : "https://api.hipchat.com",
+  "apiVersion" : "v1",
+  "authenticationToken" : "InsertYourTokenHere",
+  "roomCreatePath" : "rooms/create",
+  "roomDeletePath" : "rooms/delete",
+  "roomHistoryPath" : "rooms/history",
+  "roomMessagePath" : "rooms/message"
 }

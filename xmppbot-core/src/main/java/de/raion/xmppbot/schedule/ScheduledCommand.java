@@ -108,7 +108,7 @@ public class ScheduledCommand implements Runnable {
 
 	private void runChatContext() {
 
-		Chat chat = context.getBot().getChat(participant);
+		Chat chat = context.getChat(participant);
 
 		if(chat == null) {
 			log.warn("Chat '{}' currently not available, skipping execution", chat);
@@ -118,13 +118,13 @@ public class ScheduledCommand implements Runnable {
 
 		context.setChat(chat);
 		context.setPrintWriter(new PrintWriter(new ChatWriter(chat)));
-		context.getBot().processCommand(createCommand(command, commandParamList));
+		context.processCommand(createCommand(command, commandParamList));
 
 	}
 
 	private void runMultiUserChatContext() {
 
-		MultiUserChat muc = context.getBot().getMultiUserChat(multiUserChatName);
+		MultiUserChat muc = context.getMultiUserChat(multiUserChatName);
 
 		if(muc == null) {
 			log.warn("MultiUserChat '{}' currently not available, skipping execution", muc);
@@ -134,7 +134,7 @@ public class ScheduledCommand implements Runnable {
 
 		context.setMultiUserChat(muc);
 		context.setPrintWriter(new PrintWriter(new MultiUserChatWriter(muc)));
-		context.getBot().processCommand(createCommand(command, commandParamList));
+		context.processCommand(createCommand(command, commandParamList));
 
 	}
 

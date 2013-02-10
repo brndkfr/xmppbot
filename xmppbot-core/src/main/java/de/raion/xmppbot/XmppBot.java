@@ -32,6 +32,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import net.dharwin.common.tools.cli.api.CLIContext;
@@ -94,6 +96,8 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	private Map<String, Class<MultiUserChatListener>> multiUserChatListenerMap;
 
 	private BotConfiguration configuration;
+	
+	 ExecutorService executorService;
 
 
 	/**
@@ -110,6 +114,8 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 		packetInterceptorMap = loadPacketInterceptors();
 		multiUserChatListenerMap = loadMultiUserChatListener();
+		
+		executorService = Executors.newCachedThreadPool();
 
 	}
 
@@ -400,6 +406,20 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 		}
 		return list;
 	}
+	
+	/**
+	 * the Nickname  used in the configured Service
+	 * @param serviceName name of the service
+	 * @return Nickname or null if service is not configured
+	 */
+	public String getNickName(String serviceName) {
+		XmppConfiguration config = configuration.getConfigurations().get(serviceName);
+		
+		if(config != null)
+			return config.getNickName();
+		
+		return null;
+	}
 
 
 
@@ -537,6 +557,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 		}
 	}
 
+	public ExecutorService getExecutorService() { return executorService; }
 
 	/**
 	 * <b>does nothing! disables shutdown</b>
@@ -599,6 +620,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	public static void main(String[] args) throws Exception {
 
 		XmppBot bot = new XmppBot();
+		log.info("starting...");
 
 		File configFile = null;
 
@@ -618,8 +640,15 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 		log.debug(config.toString());
 
+		log.info("initializing");
 		bot.init(config);
-		TimeUnit.HOURS.sleep(1);
+		log.info("started");
+		
+		//TODO better solution
+		while(true) {
+			TimeUnit.HOURS.sleep(1);
+		}
+	
 
 	}
 }
