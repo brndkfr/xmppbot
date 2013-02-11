@@ -160,7 +160,7 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 		if(!status.toLowerCase().equals("closed"))
 			builder.append(createImageTag(priorityUrl, priority));
 		
-		builder.append(" <b>").append(issueSummary).append("</b>");
+		builder.append(" - ").append(issueSummary);
 		builder.append(createImageTag(statusUrl, status));
 		
 		return builder.toString();
