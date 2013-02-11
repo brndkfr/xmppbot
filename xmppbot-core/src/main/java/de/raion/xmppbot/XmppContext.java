@@ -271,15 +271,17 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		File file = new File(aClass.getSimpleName().toLowerCase()+".json").getAbsoluteFile();
+		
 		try {
-			return mapper.readValue(new File(aClass.getSimpleName().toLowerCase()+".json"), aClass);
+			return mapper.readValue(file, aClass);
 		} catch (Exception  e) {
 
-			log.warn("loadConfig - {}", e.getMessage());
+			log.warn("loadConfig - {}, file={}", e.getMessage(), file.toString());
 			try {
 				return aClass.newInstance();
 			} catch (Exception e1) {
-				log.error("loadconfig - {}", e1.getMessage());
+				log.error("loadconfig - {}, file={}", e1.getMessage(), file.toString());
 				return null;
 			}
 		}
