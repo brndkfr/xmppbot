@@ -172,7 +172,9 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 	}
 
 	public boolean matches(String aString) {
-		return pattern.matcher(aString).find();
+		if(pattern != null)
+			return pattern.matcher(aString).find();
+		return Boolean.FALSE;
 	}
 
 	/**
