@@ -245,4 +245,9 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 			log.info("using pattern '{}' for matching", regex);
 		}
 	}
+
+
+	public JiraConfig getConfig() {
+		return config;
+	}
 }

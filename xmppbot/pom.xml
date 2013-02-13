@@ -106,8 +106,9 @@
 									</mapper>
 								</data>
 								<data>
-									<src>src/main/debian/etc/enbot.json</src>
-									<type>file</type>
+									<src>src/main/debian/etc/</src>
+									<type>directory</type>
+									<includes>*/**</includes>
 									<mapper>
 										<type>perm</type>
 										<prefix>/etc/enbot</prefix>

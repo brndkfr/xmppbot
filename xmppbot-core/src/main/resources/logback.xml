@@ -54,7 +54,7 @@
 		</encoder>
 	</appender>
 
-	<logger name="de.raion.xmppbot" level="INFO">
+	<logger name="de.raion.xmppbot" level="debug">
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="FILE" />
 	</logger>
