@@ -118,6 +118,11 @@
 						<inceptionYear>2012</inceptionYear>
 						<clearAfterOperation>true</clearAfterOperation>
 						<verbose>true</verbose>
+						<excludes>
+             			   <exclude>*.conf</exclude>
+                		   <exclude>*.json</exclude>
+                        </excludes>
+						
 					</configuration>
 					<executions>
 						<execution>
@@ -127,6 +132,12 @@
 							</goals>
 							<phase>process-sources</phase>
 						</execution>
+						<execution>
+         				   <id>download-licenses</id>
+            				<goals>
+             					 <goal>download-licenses</goal>
+            				</goals>
+          				</execution>
 					</executions>
 				</plugin>
 				<plugin>
