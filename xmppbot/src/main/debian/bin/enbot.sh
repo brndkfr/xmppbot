@@ -2,7 +2,7 @@
 
 ###
 # #%L
-# XmppBot Install
+# XmppBot Debian Packaging
 # %%
 # Copyright (C) 2012 - 2013 Bernd Kiefer <b.kiefer@raion.de>
 # %%
