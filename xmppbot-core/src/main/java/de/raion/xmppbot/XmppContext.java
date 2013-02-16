@@ -271,7 +271,7 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		File file = new File(aClass.getSimpleName().toLowerCase()+".json").getAbsoluteFile();
+		File file = new File(System.getProperty("user.dir"), aClass.getSimpleName().toLowerCase()+".json").getAbsoluteFile();
 		
 		try {
 			return mapper.readValue(file, aClass);
