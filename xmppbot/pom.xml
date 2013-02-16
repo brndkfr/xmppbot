@@ -9,7 +9,7 @@
 	<artifactId>xmppbot</artifactId>
 	<packaging>pom</packaging>
 
-	<name>XmppBot Install</name>
+	<name>XmppBot Debian Packaging</name>
 	<description>assembly instructions and configuration for packaging</description>
 
 	<properties>
@@ -259,4 +259,5 @@
 	</build>
 
 
+	<url>https://github.com/brndkfr/xmppbot/tree/master/xmppbot</url>
 </project>
