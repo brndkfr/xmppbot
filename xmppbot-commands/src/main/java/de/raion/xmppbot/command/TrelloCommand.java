@@ -21,6 +21,10 @@ package de.raion.xmppbot.command;
 
 
 import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 import net.dharwin.common.tools.cli.api.annotations.CLICommand;
 
@@ -28,6 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.beust.jcommander.Parameter;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.ClientResponse.Status;
@@ -54,7 +60,7 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 	@Parameter(names = { "-a", "--auth" }, description = "starts the authorization process")
 	Boolean authorize = false;
 	
-	@Parameter(names = { "-f", "--force" }, description = "starts the authorization process")
+	@Parameter(names = { "-f", "--force" }, description = "BETA!: starts the authorization process")
 	Boolean force = false;
 	
 	@Override
@@ -87,33 +93,14 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 		saveConfig(config, context);
 	}
 
-
-	
-
-
-	
-
-
-
-
-
 	private void doAuthorize(XmppContext context, TrelloConfig config, Boolean force) {
-		println("start authorization");
+				
 		println("following link will ask you to allow me read-only access forever to your organizations and boards");
 		println(createAccessTokenRequestLink(config.getAuthorizeUrl(), config.getApplicationKey()));
-		println("please use following command:  trello -v -t The64CharactersTokenProvidedFromTheTrelloPage");
+		println("please use following command:  trello -v -t The64CharTokenProvidedFromTheTrelloPage");
 		println("or:  trello --validate --acces-token The64CharactersTokenProvidedFromTheTrelloPage");
+		
 	}
-
-
-
-
-
-
-
-
-
-
 
 	private String createAccessTokenRequestLink(String authorizeUrl, String appKey) {
 		// key=ed2fc62db0f1351c8126ca06a7c94cb8&name=Enbot+Botson&
@@ -158,7 +145,40 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 			
 			if(response.getClientResponseStatus() == Status.OK) {
 				println("reading board infos");
-				println(response.getEntity(String.class));
+				
+				ObjectMapper mapper = new ObjectMapper();
+				try {
+						JsonNode rootNode = mapper.readValue(response.getEntityInputStream(), JsonNode.class);
+						int size = rootNode.size();
+											
+						for(int i=0; i<size; i++) {
+							JsonNode boardNode = rootNode.get(i);
+							String id	= boardNode.path("id").asText();
+							String name = boardNode.path("name").asText();
+							String url  = boardNode.path("shortUrl").asText();
+							boolean closed = Boolean.parseBoolean(boardNode.path("closed").asText());
+							
+							if(!closed) {
+								println(name+" - "+url);
+								
+								config.addBoard(id, name);
+								config.addBoardUrl(id, url);
+							}
+						}
+						
+						println("validation done");
+						
+						Set<String> boardIdSet = config.getBoards().keySet();
+						
+						for (String id : boardIdSet) {
+							config = addCardInformations(id, config, client, mapper);
+						}
+						saveConfig(config, context);
+				
+				}catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -179,6 +199,51 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 		 
 	}
 
+
+	private TrelloConfig addCardInformations(String id, TrelloConfig config, Client client, ObjectMapper mapper) {
+		
+		WebResource boardResource = client.resource(config.getBoardBaseUrl())
+				                          .path(id)
+				                          .queryParam("key", config.getApplicationKey())
+				                          .queryParam("token", config.getAccessToken())
+				                          .queryParam("cards", "all");
+		
+		ClientResponse response = boardResource.get(ClientResponse.class);
+		
+		if(response.getClientResponseStatus() == Status.OK) {
+			
+			try {
+				JsonNode rootNode = mapper.readValue(response.getEntityInputStream(), JsonNode.class);
+				JsonNode cardsNode = rootNode.path("cards");
+				
+				Iterator<String> shortIdIterator =  cardsNode.findValuesAsText("idShort").iterator();
+				Iterator<String> nameIterator =  cardsNode.findValuesAsText("name").iterator();
+				Iterator<String> urlIterator =  cardsNode.findValuesAsText("shortUrl").iterator();
+				
+				HashMap<String, TrelloConfig.TrelloCard> map = new HashMap<String, TrelloConfig.TrelloCard>();
+				
+				while(shortIdIterator.hasNext()) {
+				
+					TrelloConfig.TrelloCard card = new TrelloConfig.TrelloCard();
+					card.setShortId(shortIdIterator.next());
+					card.setShortUrl(urlIterator.next());
+					card.setName(nameIterator.next());
+					map.put(shortIdIterator.next(), card);
+				}
+				
+				config.addCards(id, map);
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} else {
+			log.warn("couldn't GET card informations for board {}, status={}", id, response.getClientResponseStatus().getStatusCode());
+		}
+		
+		return config;
+	}
 
 	private boolean isConfigProper(TrelloConfig config) {
 		
@@ -201,16 +266,6 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 		
 		return isConfigProper;
 	}
-
-
-
-
-
-
-
-
-
-
 
 	private void saveConfig(TrelloConfig config, XmppContext context) {
 		try {

@@ -1,4 +1,8 @@
 package de.raion.xmppbot.command;
+
+import java.util.AbstractMap.SimpleEntry;
+import java.util.HashMap;
+
 /*
  * #%L
  * XmppBot Commands
@@ -29,13 +33,22 @@ package de.raion.xmppbot.command;
  * 
  */
 public class TrelloConfig {
-
-	private String applicationKey;
 	
 	private String authorizeUrl = "https://trello.com/1/authorize";
 
-	private String accessToken;
+	private String boardBaseUrl = "https://trello.com/1/boards/";
+
+	private String applicationKey;
 		
+	private String accessToken;
+
+	private HashMap<String, String> boards  = new HashMap<String, String>();
+	
+	private HashMap<String, String> boardUrls = new HashMap<String, String>();
+
+	private HashMap<String, HashMap<String, TrelloCard>> cards = new HashMap<String, HashMap<String, TrelloCard>>();
+
+			
 	
 	public String getApplicationKey() {
 		return applicationKey;
@@ -62,5 +75,104 @@ public class TrelloConfig {
 		return accessToken;
 	}
 
+	public String getBoardBaseUrl() {
+		return boardBaseUrl;
+	}
+
+	public void addBoard(String id, String name) {
+		
+		if(boards == null)
+			boards  = new HashMap<String, String>();
+		
+		boards.put(id, name);
+		
+	}
+
+	public void addBoardUrl(String id, String url) {
+		
+		if(boardUrls == null)
+			boardUrls = new HashMap<String, String>();
+		
+		boardUrls.put(id, url);
+		
+	}
+
+	public HashMap<String, String> getBoards() {
+		return boards;
+		
+	}
+
+	public void addCards(String id,	HashMap<String, TrelloCard> map) {
+		
+		if(cards == null)
+			 cards = new HashMap<String, HashMap<String, TrelloCard>>();
+		
+		cards.put(id, map);
+	}
+
+	public HashMap<String, String> getBoardUrls() {
+		return boardUrls;
+	}
+
+	public void setBoardUrls(HashMap<String, String> boardUrls) {
+		this.boardUrls = boardUrls;
+	}
+
 	
+	public HashMap<String, HashMap<String, TrelloCard>> getCards() {
+		return cards;
+	}
+
+	public void setCards(HashMap<String, HashMap<String, TrelloCard>> cards) {
+		this.cards = cards;
+	}
+
+	public void setBoardBaseUrl(String boardBaseUrl) {
+		this.boardBaseUrl = boardBaseUrl;
+	}
+
+	public void setBoards(HashMap<String, String> boards) {
+		this.boards = boards;
+	}
+
+	
+	public static class TrelloCard {
+		
+		private String shortId;
+		private String name;
+		private String shortUrl;
+		
+		public String getShortId() {
+			return shortId;
+		}
+		public void setShortId(String shortId) {
+			this.shortId = shortId;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getShortUrl() {
+			return shortUrl;
+		}
+		public void setShortUrl(String shortUrl) {
+			this.shortUrl = shortUrl;
+		}
+		
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("TrelloCard [");
+			if (shortId != null)
+				builder.append("shortId=").append(shortId).append(", ");
+			if (name != null)
+				builder.append("name=").append(name).append(", ");
+			if (shortUrl != null)
+				builder.append("shortUrl=").append(shortUrl);
+			builder.append("]");
+			return builder.toString();
+		}
+	}
 }
