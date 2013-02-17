@@ -1,4 +1,5 @@
-package de.raion.xmppbot.plugin;/*
+package de.raion.xmppbot.plugin;
+/*
  * #%L
  * XmppBot Core
  * %%

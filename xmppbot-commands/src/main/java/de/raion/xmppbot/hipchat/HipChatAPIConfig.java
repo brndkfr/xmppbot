@@ -1,4 +1,5 @@
-package de.raion.xmppbot.hipchat;/*
+package de.raion.xmppbot.hipchat;
+/*
  * #%L
  * XmppBot Commands
  * %%

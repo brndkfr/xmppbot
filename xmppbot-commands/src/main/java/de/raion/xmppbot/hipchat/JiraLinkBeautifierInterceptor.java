@@ -1,4 +1,5 @@
-package de.raion.xmppbot.hipchat;/*
+package de.raion.xmppbot.hipchat;
+/*
  * #%L
  * XmppBot Commands
  * %%
@@ -39,7 +40,8 @@ import de.raion.xmppbot.plugin.JiraIssuePlugin;
 import de.raion.xmppbot.plugin.PluginManager;
 import de.raion.xmppbot.util.PacketUtils;
 
-/** * 
+/**
+ * 
  * @author b.kiefer
  *
  */
@@ -65,7 +67,15 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 		PluginManager pluginManager = getContext().getPluginManager();
 		
 		if(apiConfig == null) {
-			apiConfig = getContext().loadConfig(HipChatAPIConfig.class);						String authToken = apiConfig.getAuthenticationToken();						if(authToken == null || authToken.equals("")) {				log.warn("no authToken configured for Hipchat, please update your hipchatapiconfig.json");				return;			}			
+			apiConfig = getContext().loadConfig(HipChatAPIConfig.class);
+			
+			String authToken = apiConfig.getAuthenticationToken();
+			
+			if(authToken == null || authToken.equals("")) {
+				log.warn("no authToken configured for Hipchat, please update your hipchatapiconfig.json");
+				return;
+			}
+			
 		}
 		
 		if(pluginManager.isEnabled(JiraIssuePlugin.class) ) {
@@ -142,14 +152,23 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 		String priorityUrl  = issue.path("fields").path("priority").get("iconUrl").asText();
 		String priority		= issue.path("fields").path("priority").get("name").asText();	
 		String statusUrl    = issue.path("fields").path("status").get("iconUrl").asText();
-		String status		= issue.path("fields").path("status").get("name").asText();		String reporterAcnt = issue.path("fields").path("reporter").get("name").asText();		String reporterName = issue.path("fields").path("reporter").get("displayName").asText();		String reporterIcon = issue.path("fields").path("reporter").path("avatarUrls").get("16x16").asText();		String assigneeAcnt = issue.path("fields").path("assignee").get("name").asText();		String assigneeName = issue.path("fields").path("assignee").get("displayName").asText();		String assigneeIcon = issue.path("fields").path("assignee").path("avatarUrls").get("16x16").asText();		
+		String status		= issue.path("fields").path("status").get("name").asText();
+		String reporterAcnt = issue.path("fields").path("reporter").get("name").asText();
+		String reporterName = issue.path("fields").path("reporter").get("displayName").asText();
+		String reporterIcon = issue.path("fields").path("reporter").path("avatarUrls").get("16x16").asText();
+		String assigneeAcnt = issue.path("fields").path("assignee").get("name").asText();
+		String assigneeName = issue.path("fields").path("assignee").get("displayName").asText();
+		String assigneeIcon = issue.path("fields").path("assignee").path("avatarUrls").get("16x16").asText();
+		
 		String line = xmppMessage.getBody();
 		int index = line.indexOf("http");
 		String issueUrl = line.substring(index).trim().replace("\n", "");
 		
 		
 		StringBuilder builder = new StringBuilder();
-				String issueText = createIssueText(issueKey, issueSummary);		
+		
+		String issueText = createIssueText(issueKey, issueSummary);
+		
 		
 		builder.append(createImageTag(issueIconUrl, issueType));
 		builder.append(" ").append(createAnchorTag(issueText, issueUrl));
@@ -159,11 +178,38 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 		if(!status.toLowerCase().equals("closed"))
 			builder.append(createImageTag(priorityUrl, priority));
 				
-		builder.append(createImageTag(statusUrl, status));				builder.append("  Opened by ");			builder.append(createAnchorTag(reporterName, createProfileUrl(plugin.getConfig().getJiraDomain(), reporterAcnt)));		builder.append(" ").append(createImageTag(reporterIcon, reporterName));		builder.append(". Current assignee is ");		builder.append(createAnchorTag(assigneeName, createProfileUrl(plugin.getConfig().getJiraDomain(), assigneeAcnt)));		builder.append(" ").append(createImageTag(assigneeIcon, assigneeName));				
+		builder.append(createImageTag(statusUrl, status));
+		
+		builder.append("  Opened by ");
+	
+		builder.append(createAnchorTag(reporterName, createProfileUrl(plugin.getConfig().getJiraDomain(), reporterAcnt)));
+		builder.append(" ").append(createImageTag(reporterIcon, reporterName));
+		builder.append(". Current assignee is ");
+		builder.append(createAnchorTag(assigneeName, createProfileUrl(plugin.getConfig().getJiraDomain(), assigneeAcnt)));
+		builder.append(" ").append(createImageTag(assigneeIcon, assigneeName));
+				
 		return builder.toString();
 	}
-	// TODO 
-	private String createProfileUrl(String jiraDomain, String accountName) {		StringBuilder builder = new StringBuilder();		builder.append("https://").append(jiraDomain);		builder.append("/secure/ViewProfile.jspa?name=");		builder.append(accountName);				return builder.toString();	}	private String createIssueText(String issueKey, String issueSummary) {		StringBuilder builder = new StringBuilder();		builder.append("<b>").append(issueKey).append("</b>");		builder.append(" - ").append(issueSummary);		return builder.toString();			}	private String createImageTag(String imageUrl, String alt) {
+
+	// TODO 
+	private String createProfileUrl(String jiraDomain, String accountName) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("https://").append(jiraDomain);
+		builder.append("/secure/ViewProfile.jspa?name=");
+		builder.append(accountName);
+		
+		return builder.toString();
+	}
+
+	private String createIssueText(String issueKey, String issueSummary) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("<b>").append(issueKey).append("</b>");
+		builder.append(" - ").append(issueSummary);
+		return builder.toString();
+		
+	}
+
+	private String createImageTag(String imageUrl, String alt) {
 		log.debug("createImageTag(imageUrl={}, alt={}", imageUrl, alt);
 		StringBuilder builder = new StringBuilder();
 		builder.append("<img src=\"").append(imageUrl).append("\" ");

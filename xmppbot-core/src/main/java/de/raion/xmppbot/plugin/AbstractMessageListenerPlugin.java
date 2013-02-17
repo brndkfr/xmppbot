@@ -78,8 +78,12 @@ public abstract class AbstractMessageListenerPlugin<T> implements PacketListener
 					} else {
 						threadPrintWriter = new PrintWriter(new ChatWriter(chat));
 					}
-
-					context.setMultiUserChat(muc);
+					
+					if(muc != null)
+						context.setMultiUserChat(muc);
+					else
+						context.setChat(chat);
+					
 					context.setPrintWriter(threadPrintWriter);
 					context.setMessage(message);
 
@@ -90,6 +94,7 @@ public abstract class AbstractMessageListenerPlugin<T> implements PacketListener
 					}
 
 					context.removeMultiUserChat();
+					context.removeChat();
 					context.removePrintWriter();
 				}
 			};

@@ -381,4 +381,23 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 		xmppBot.processCommand(cmdString);
 		
 	}
+
+	/**
+	 * @return true if the context is bound to a underlying multiuserchat, otherwise false
+	 */
+	public boolean isMultiUserChatBound() {
+		return (multiUserChatThreadLocal.get() != null) && (chatThreadLocal.get() == null);
+	}
+	
+	/**
+	 * @return @return true if the context is bound to a underlying chat, otherwise false
+	 */
+	public boolean isChatBound() {
+		return (chatThreadLocal.get() != null) && (multiUserChatThreadLocal.get() == null);
+	}
+
+	public void removeChat() {
+		chatThreadLocal.remove();
+		
+	}
 }
