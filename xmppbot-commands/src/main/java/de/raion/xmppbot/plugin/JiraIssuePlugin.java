@@ -61,7 +61,7 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 
 	private ObjectMapper mapper;
 
-	private MessageBodyMatchesFilter acceptFilter;;
+	private MessageBodyMatchesFilter acceptFilter;
 
 	private Pattern pattern;
 

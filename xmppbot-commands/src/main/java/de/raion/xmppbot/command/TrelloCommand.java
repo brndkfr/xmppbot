@@ -21,9 +21,7 @@ package de.raion.xmppbot.command;
 
 
 import java.io.IOException;
-import java.util.AbstractMap;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 import net.dharwin.common.tools.cli.api.annotations.CLICommand;
@@ -62,6 +60,9 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 	
 	@Parameter(names = { "-f", "--force" }, description = "BETA!: starts the authorization process")
 	Boolean force = false;
+	
+	@Parameter(names = { "-u", "--update" }, description = "update boards and cards")
+	Boolean update = false;
 	
 	@Override
 	public void executeCommand(XmppContext context) {
@@ -181,22 +182,6 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 				}
 			}
 		}
-		
-		
-		
-
-//		
-//		 // https://trello.com/1/organizations/netbreezech?boards=open&board_fields=name,shortUrl
-//		 
-//		 // https://trello.com/docs/api/card/index.html
-//		 
-//		 // https://trello.com/1/cards/4ds9DMLl?members=true&member_fields=all
-//		 
-//		 
-//		 ClientResponse response = resource.get(ClientResponse.class);
-//		 
-//		 context.println(response.getEntity(String.class));
-		 
 	}
 
 
@@ -216,21 +201,23 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 				JsonNode rootNode = mapper.readValue(response.getEntityInputStream(), JsonNode.class);
 				JsonNode cardsNode = rootNode.path("cards");
 				
-				Iterator<String> shortIdIterator =  cardsNode.findValuesAsText("idShort").iterator();
-				Iterator<String> nameIterator =  cardsNode.findValuesAsText("name").iterator();
-				Iterator<String> urlIterator =  cardsNode.findValuesAsText("shortUrl").iterator();
-				
 				HashMap<String, TrelloConfig.TrelloCard> map = new HashMap<String, TrelloConfig.TrelloCard>();
+							
+				int size = cardsNode.size();
 				
-				while(shortIdIterator.hasNext()) {
 				
+				for(int i=0; i<size; i++) {
+					
+					JsonNode json = cardsNode.get(i);
 					TrelloConfig.TrelloCard card = new TrelloConfig.TrelloCard();
-					card.setShortId(shortIdIterator.next());
-					card.setShortUrl(urlIterator.next());
-					card.setName(nameIterator.next());
-					map.put(shortIdIterator.next(), card);
+					
+					card.setShortId(json.path("idShort").asText());
+					card.setShortUrl(json.path("shortUrl").asText());
+					card.setName(json.path("name").asText());
+					
+					map.put(card.getShortId(), card);
 				}
-				
+			
 				config.addCards(id, map);
 				
 			} catch (Exception e) {
