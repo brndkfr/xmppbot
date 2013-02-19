@@ -48,6 +48,10 @@ public class TrelloConfig {
 
 	private HashMap<String, HashMap<String, TrelloCard>> cards = new HashMap<String, HashMap<String, TrelloCard>>();
 
+	private String matchingPattern = "#(\\d+)";
+
+	private String defaultBoardId;
+
 			
 	
 	public String getApplicationKey() {
@@ -135,7 +139,22 @@ public class TrelloConfig {
 		this.boards = boards;
 	}
 
+	public String getMatchingPattern() {
+		return matchingPattern;
+	}
 	
+	public void setMatchingPattern(String matchingPattern) {
+		this.matchingPattern = matchingPattern;
+	}
+
+	public String getDefaultBoardId() {
+		return defaultBoardId;
+	}
+
+	public void setDefaultBoardId(String defaultBoardId) {
+		this.defaultBoardId = defaultBoardId;
+	}
+
 	public static class TrelloCard {
 		
 		private String shortId;
@@ -175,4 +194,11 @@ public class TrelloConfig {
 			return builder.toString();
 		}
 	}
+
+
+
+	
+
+
+	
 }
