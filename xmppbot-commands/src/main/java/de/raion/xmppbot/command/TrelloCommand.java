@@ -63,6 +63,9 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 	@Parameter(names = { "-f", "--force" }, description = "BETA!: starts the authorization process")
 	Boolean force = false;
 	
+	@Parameter(names = { "-u", "--update" }, description = "update boards and cards")
+	Boolean update = false;
+	
 	@Override
 	public void executeCommand(XmppContext context) {
 		
@@ -221,16 +224,23 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 				Iterator<String> urlIterator =  cardsNode.findValuesAsText("shortUrl").iterator();
 				
 				HashMap<String, TrelloConfig.TrelloCard> map = new HashMap<String, TrelloConfig.TrelloCard>();
+							
+				int size = cardsNode.size();
 				
 				while(shortIdIterator.hasNext()) {
 				
+				for(int i=0; i<size; i++) {
+					
+					JsonNode json = cardsNode.get(i);
 					TrelloConfig.TrelloCard card = new TrelloConfig.TrelloCard();
-					card.setShortId(shortIdIterator.next());
-					card.setShortUrl(urlIterator.next());
-					card.setName(nameIterator.next());
-					map.put(shortIdIterator.next(), card);
+					
+					card.setShortId(json.path("idShort").asText());
+					card.setShortUrl(json.path("shortUrl").asText());
+					card.setName(json.path("name").asText());
+					
+					map.put(card.getShortId(), card);
 				}
-				
+			
 				config.addCards(id, map);
 				
 			} catch (Exception e) {
