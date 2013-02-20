@@ -75,11 +75,11 @@ done
 ##################################################
 case "$ACTION" in
   start)
-   # check_java
-   # check_user $USER
+   check_java
+   check_user $USER
    
     echo "starting enbot"
-    echo "CP=$CP"
+   
     # java -Duser.dir=$ENBOT_WORKING_DIR $CP de.raion.xmppbot.XmppBot $ENBOT_CONFIG_FILE
     java -Duser.dir=/etc/enbot/ -Dlogger.basedir=/var/log/enbot -classpath /usr/local/lib/enbot/libs/*: de.raion.xmppbot.XmppBot /etc/enbot/enbot.json
     exit 1
@@ -109,6 +109,7 @@ init() {
   if [ -f "${conf_file}" ]; then
     . ${conf_file}
     echo ${conf_file}
+	echo "workingdir=$ENBOT_WORKING_DIR"
   fi
 }
 
