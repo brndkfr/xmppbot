@@ -21,9 +21,8 @@ package de.raion.xmppbot.command;
 
 
 import java.io.IOException;
-import java.util.AbstractMap;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import net.dharwin.common.tools.cli.api.annotations.CLICommand;
@@ -51,7 +50,7 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 	@Parameter(names = { "-k", "--application-key" }, description = "sets the application key used for authorization")
 	String applicationKey;
 	
-	@Parameter(names = { "-t", "--acess-token" }, description = "sets the acess token to use")
+	@Parameter(names = { "-t", "--access-token" }, description = "sets the acess token to use")
 	String accessToken;
 	
 	@Parameter(names = { "-v", "--validate" }, description = "validates the given configuration")
@@ -65,6 +64,9 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 	
 	@Parameter(names = { "-u", "--update" }, description = "update boards and cards")
 	Boolean update = false;
+	
+	@Parameter(names = { "-i", "--info" }, description = "shows information")
+	Boolean list = false;
 	
 	@Override
 	public void executeCommand(XmppContext context) {
@@ -93,15 +95,49 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 			doAuthorize(context, config, force);
 		}
 		
+		if(list) {
+			showInformation(context, config);
+		}
+		
 		saveConfig(config, context);
 	}
 
+	private void showInformation(XmppContext context, TrelloConfig config) {
+		StringBuilder builder = new StringBuilder("Trello configuration:");
+		builder.append("\n---------------------\n");
+		
+		if(config.getApplicationKey() != null)
+			builder.append("- application key available\n");
+		else
+			builder.append("- application key not available\n");
+		
+		if(config.getAccessToken() != null)
+			builder.append("- access token available\n");
+		else
+			builder.append("- access token not available\n\n");
+			
+		builder.append("Boards:\n-------\n");
+		Set<Entry<String, String>> boardSet = config.getBoards().entrySet();
+		for (Entry<String, String> entry : boardSet) {
+			builder.append("- ").append(entry.getValue()).append(" - ");
+			builder.append(entry.getKey()).append("\n");
+		}
+		
+		println(builder.toString());
+	}
+
 	private void doAuthorize(XmppContext context, TrelloConfig config, Boolean force) {
-				
-		println("following link will ask you to allow me read-only access forever to your organizations and boards");
+		
 		println(createAccessTokenRequestLink(config.getAuthorizeUrl(), config.getApplicationKey()));
-		println("please use following command:  trello -v -t The64CharTokenProvidedFromTheTrelloPage");
-		println("or:  trello --validate --acces-token The64CharactersTokenProvidedFromTheTrelloPage");
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("following this link will ask you to allow me read-only access forever to your organizations and boards");
+		builder.append("\n");
+		builder.append("please use following command afterwards:  trello -v -t The64CharTokenProvidedFromTheTrelloPage");
+		builder.append("\n");
+		builder.append("or:  trello --validate --acces-token The64CharactersTokenProvidedFromTheTrelloPage");
+		
+		println(builder.toString());
 		
 	}
 
@@ -119,16 +155,7 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 				
 	}
 
-
-
-
-
-
-
-
-
-
-
+	
 	private void validateConfiguration(final XmppContext context, TrelloConfig config) {
 		
 		println("starting validation");
@@ -184,22 +211,6 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 				}
 			}
 		}
-		
-		
-		
-
-//		
-//		 // https://trello.com/1/organizations/netbreezech?boards=open&board_fields=name,shortUrl
-//		 
-//		 // https://trello.com/docs/api/card/index.html
-//		 
-//		 // https://trello.com/1/cards/4ds9DMLl?members=true&member_fields=all
-//		 
-//		 
-//		 ClientResponse response = resource.get(ClientResponse.class);
-//		 
-//		 context.println(response.getEntity(String.class));
-		 
 	}
 
 
@@ -214,21 +225,14 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 		ClientResponse response = boardResource.get(ClientResponse.class);
 		
 		if(response.getClientResponseStatus() == Status.OK) {
-			
 			try {
 				JsonNode rootNode = mapper.readValue(response.getEntityInputStream(), JsonNode.class);
 				JsonNode cardsNode = rootNode.path("cards");
-				
-				Iterator<String> shortIdIterator =  cardsNode.findValuesAsText("idShort").iterator();
-				Iterator<String> nameIterator =  cardsNode.findValuesAsText("name").iterator();
-				Iterator<String> urlIterator =  cardsNode.findValuesAsText("shortUrl").iterator();
-				
+							
 				HashMap<String, TrelloConfig.TrelloCard> map = new HashMap<String, TrelloConfig.TrelloCard>();
 							
 				int size = cardsNode.size();
-				
-				while(shortIdIterator.hasNext()) {
-				
+						
 				for(int i=0; i<size; i++) {
 					
 					JsonNode json = cardsNode.get(i);
@@ -240,20 +244,19 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 					
 					map.put(card.getShortId(), card);
 				}
-			
 				config.addCards(id, map);
-				
-			} catch (Exception e) {
+			}
+				catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		} else {
 			log.warn("couldn't GET card informations for board {}, status={}", id, response.getClientResponseStatus().getStatusCode());
 		}
 		
 		return config;
 	}
+	
 
 	private boolean isConfigProper(TrelloConfig config) {
 		
@@ -272,18 +275,16 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 			println("acess-token missing, try: 'trello -a' or 'trello -auth'. type trello --help for more infos");
 			isConfigProper = false;
 		}
-		
-		
+			
 		return isConfigProper;
 	}
 
+	
 	private void saveConfig(TrelloConfig config, XmppContext context) {
 		try {
 			context.saveConfig(config);
 		} catch (IOException e) {
 			log.warn("error occured when trying to save trelloconfig.json, message = {}", e.getMessage());
 		}
-		
 	}
-
 }

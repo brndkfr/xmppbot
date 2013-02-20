@@ -1,6 +1,7 @@
 #xmppbot
 xmppbot-core/*.json
 xmppbot-commands/bin/
+xmppbot-core/bin/
 
 
 #################

@@ -37,6 +37,8 @@ public class TrelloConfig {
 	private String authorizeUrl = "https://trello.com/1/authorize";
 
 	private String boardBaseUrl = "https://trello.com/1/boards/";
+	
+	private String cardBaseUrl = "https://trello.com/1/cards/";
 
 	private String applicationKey;
 		
@@ -47,6 +49,10 @@ public class TrelloConfig {
 	private HashMap<String, String> boardUrls = new HashMap<String, String>();
 
 	private HashMap<String, HashMap<String, TrelloCard>> cards = new HashMap<String, HashMap<String, TrelloCard>>();
+
+	private String matchingPattern = "#(\\d+)";
+
+	private String defaultBoardId;
 
 			
 	
@@ -77,6 +83,14 @@ public class TrelloConfig {
 
 	public String getBoardBaseUrl() {
 		return boardBaseUrl;
+	}
+
+	public String getCardBaseUrl() {
+		return cardBaseUrl;
+	}
+
+	public void setCardBaseUrl(String cardBaseUrl) {
+		this.cardBaseUrl = cardBaseUrl;
 	}
 
 	public void addBoard(String id, String name) {
@@ -135,7 +149,22 @@ public class TrelloConfig {
 		this.boards = boards;
 	}
 
+	public String getMatchingPattern() {
+		return matchingPattern;
+	}
 	
+	public void setMatchingPattern(String matchingPattern) {
+		this.matchingPattern = matchingPattern;
+	}
+
+	public String getDefaultBoardId() {
+		return defaultBoardId;
+	}
+
+	public void setDefaultBoardId(String defaultBoardId) {
+		this.defaultBoardId = defaultBoardId;
+	}
+
 	public static class TrelloCard {
 		
 		private String shortId;
@@ -175,4 +204,11 @@ public class TrelloConfig {
 			return builder.toString();
 		}
 	}
+
+
+
+	
+
+
+	
 }

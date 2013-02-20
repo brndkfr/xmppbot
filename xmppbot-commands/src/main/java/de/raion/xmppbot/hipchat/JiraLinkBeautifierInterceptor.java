@@ -20,6 +20,9 @@ package de.raion.xmppbot.hipchat;
  */
 
 
+import static de.raion.xmppbot.command.util.HtmlUtils.createAnchorTag;
+import static de.raion.xmppbot.command.util.HtmlUtils.createImageTag;
+
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
@@ -209,22 +212,8 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 		
 	}
 
-	private String createImageTag(String imageUrl, String alt) {
-		log.debug("createImageTag(imageUrl={}, alt={}", imageUrl, alt);
-		StringBuilder builder = new StringBuilder();
-		builder.append("<img src=\"").append(imageUrl).append("\" ");
-		builder.append("alt=\"").append(alt).append("\">");
-		return builder.toString();
-		
-	}
-
-	private String createAnchorTag(String issue, String link) {
-		StringBuilder builder= new StringBuilder();
-		builder.append("<a href=\"").append(link).append("\">");
-		builder.append(issue).append("</a>");
-		
-		return builder.toString();
-	}
+	
+	
 
 	@Override
 	public PacketFilter getPacketFilter() {
