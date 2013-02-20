@@ -38,7 +38,18 @@ import de.raion.xmppbot.command.core.AbstractXmppCommand;
 import de.raion.xmppbot.plugin.JiraIssuePlugin;
 
 /**
+ * configures the jira-issue plugin<br>
+ * <pre>
+ * {@code
+	  Usage: jira [options]
+	  Options:
+	    -a, --auth     sets the authentication credentials, -a <usr> <pwd>
+	    -d, --domain   sets the domain jira is running
+	    -u, --update   updates the configuration
+	                   Default: false
+ * }
  * @author bkiefer
+ * @see JiraIssuePlugin
  *
  */
 @CLICommand(name="jira", description="configures the jira-issue plugin")

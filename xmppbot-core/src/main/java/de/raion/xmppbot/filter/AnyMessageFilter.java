@@ -1,4 +1,4 @@
-package de.raion.xmppbot.filter;
+ package de.raion.xmppbot.filter;
 /*
  * #%L
  * XmppBot Core

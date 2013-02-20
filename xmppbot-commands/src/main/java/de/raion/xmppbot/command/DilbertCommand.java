@@ -46,6 +46,18 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import de.raion.xmppbot.XmppContext;
 import de.raion.xmppbot.command.core.AbstractXmppCommand;
 
+/**
+ * posts dilbert strips (default: strip of the day)<br>
+ * <pre>
+ * {@code
+ *		Usage: dilbert [options]
+ *		Options:
+ *   	-r, --random   posts a random strip
+ *                     Default: false
+ * }                 
+ * @author b.kiefer
+ *
+ */
 @CLICommand(name="dilbert", description="posts dilbert strips (default: strip of the day)")
 public class DilbertCommand extends AbstractXmppCommand {
 
@@ -117,7 +129,6 @@ public class DilbertCommand extends AbstractXmppCommand {
 
 		 DateTime randomDate = new DateTime(randomYear, randomMonth, randomDay, 0, 0, 0);
 		 DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-
 
 		 StringBuilder builder = new StringBuilder(RANDOM_BASE_URL);
 		 builder.append(formatter.print(randomDate));

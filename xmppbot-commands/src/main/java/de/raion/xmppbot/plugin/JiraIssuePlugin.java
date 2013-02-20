@@ -50,9 +50,9 @@ import de.raion.xmppbot.command.JiraConfig;
 import de.raion.xmppbot.filter.MessageBodyMatchesFilter;
 
 /**
- * listen for messages with jira related issues and posts summary and links into chat.
+ * listen for messages with jira related issues and posts summary and links into chat/channel.
  *
- * @Todo implement authentication for non public jira instances
+ * 
  */
 @MessageListenerPlugin(name="jira-issues", description="provides summary and link to jira issues when mentioned in chat")
 public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlugin> {
