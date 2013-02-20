@@ -29,7 +29,7 @@ import de.raion.xmppbot.annotation.PacketInterceptor;
 import de.raion.xmppbot.command.TrelloConfig;
 import de.raion.xmppbot.command.util.HtmlUtils;
 import de.raion.xmppbot.plugin.PluginManager;
-import de.raion.xmppbot.plugin.TrelloPlugin;
+import de.raion.xmppbot.plugin.TrelloCardPlugin;
 import de.raion.xmppbot.util.PacketUtils;
 
 @PacketInterceptor(service = "hipchat")
@@ -85,7 +85,7 @@ public class TrelloLinkBeautifierInterceptor  extends AbstractPacketInterceptor{
 			}
 		}
 		
-		if(pluginManager.isEnabled(TrelloPlugin.class)) {
+		if(pluginManager.isEnabled(TrelloCardPlugin.class)) {
 			
 			if(pattern.matcher(xmppMessage.getBody()).find()) {
 				rewriteMessage(xmppMessage);

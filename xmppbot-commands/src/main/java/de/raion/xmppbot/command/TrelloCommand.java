@@ -53,6 +53,9 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 	@Parameter(names = { "-t", "--access-token" }, description = "sets the acess token to use")
 	String accessToken;
 	
+	@Parameter(names = { "-d", "--default" }, description = "sets the default board to use: -d <boardid>")
+	String defaultBoard;
+	
 	@Parameter(names = { "-v", "--validate" }, description = "validates the given configuration")
 	Boolean validate = false;
 	
@@ -99,7 +102,23 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 			showInformation(context, config);
 		}
 		
+		if(defaultBoard != null)
+			setDefaultBoard(defaultBoard, context, config);
+		
 		saveConfig(config, context);
+	}
+
+	private void setDefaultBoard(String boardId, XmppContext context,
+			TrelloConfig config) {
+		
+		if(config.getBoards().containsKey(boardId)) {
+			config.setDefaultBoardId(boardId);
+			println("default board set to "+boardId+" - "+config.getBoards().get(boardId));
+		} else
+		{
+			println("unknown boardid. please run trello --update for updating the boardinfos or trello --info for showing available boards");
+		}
+		
 	}
 
 	private void showInformation(XmppContext context, TrelloConfig config) {
@@ -121,6 +140,11 @@ public class TrelloCommand extends de.raion.xmppbot.command.core.AbstractXmppCom
 		for (Entry<String, String> entry : boardSet) {
 			builder.append("- ").append(entry.getValue()).append(" - ");
 			builder.append(entry.getKey()).append("\n");
+		}
+		
+		if(config.getDefaultBoardId() != null) {
+			builder.append("Default Board:\n--------------\n");
+			builder.append(config.getBoards().get(config.getDefaultBoardId())).append(" - ").append(config.getDefaultBoardId());
 		}
 		
 		println(builder.toString());

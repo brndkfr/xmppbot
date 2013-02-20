@@ -22,15 +22,15 @@ import de.raion.xmppbot.filter.MessageBodyMatchesFilter;
 
 
 @MessageListenerPlugin(name="trello-cards", description="provides summary and link to trello-cards when mentioned in chat")
-public class TrelloPlugin  extends AbstractMessageListenerPlugin<TrelloPlugin> {
+public class TrelloCardPlugin  extends AbstractMessageListenerPlugin<TrelloCardPlugin> {
 
-	private static Logger log = LoggerFactory.getLogger(TrelloPlugin.class);
+	private static Logger log = LoggerFactory.getLogger(TrelloCardPlugin.class);
 	
 	private MessageBodyMatchesFilter acceptFilter;
 	private TrelloConfig config;
 	private Pattern pattern;
 
-	public TrelloPlugin(XmppBot aXmppBot) {
+	public TrelloCardPlugin(XmppBot aXmppBot) {
 		super(aXmppBot);
 	 		
 		acceptFilter = new MessageBodyMatchesFilter(""); // correct initialization in init
@@ -125,13 +125,24 @@ public class TrelloPlugin  extends AbstractMessageListenerPlugin<TrelloPlugin> {
 	private HashMap<String, TrelloCard> getMatchingCards(String cardIdShort) {
 		HashMap<String, TrelloCard> map = new HashMap<String, TrelloCard>(); 
 		
-		Set<String> boardIdSet = config.getCards().keySet();
+		if(config.getDefaultBoardId() != null) {
+			
+			if(config.getCards().get(config.getDefaultBoardId()).containsKey(cardIdShort))
+				map.put(config.getBoards().get(config.getDefaultBoardId()), config.getCards().get(config.getDefaultBoardId()).get(cardIdShort));
+			
+			
+		} else {
 		
-		for (String boardId : boardIdSet) {
-			String name = config.getBoards().get(boardId);
-			if(config.getCards().get(boardId).containsKey(cardIdShort))
-				map.put(name, config.getCards().get(boardId).get(cardIdShort));
+			Set<String> boardIdSet = config.getCards().keySet();
+			
+			for (String boardId : boardIdSet) {
+				String name = config.getBoards().get(boardId);
+				if(config.getCards().get(boardId).containsKey(cardIdShort))
+					map.put(name, config.getCards().get(boardId).get(cardIdShort));
+			}
 		}
+		
+		
 	
 		return map;
 	}
