@@ -3,4 +3,5 @@
 USER=enbot
 
 # create the symlinks
+echo "creating symlink: /usr/local/lib/enbot/bin/enbot.sh -> /usr/bin/enbot"
 sudo ln -f -s /usr/local/lib/enbot/bin/enbot.sh /usr/bin/enbot

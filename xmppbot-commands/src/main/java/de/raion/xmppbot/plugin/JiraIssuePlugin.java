@@ -50,9 +50,7 @@ import de.raion.xmppbot.command.JiraConfig;
 import de.raion.xmppbot.filter.MessageBodyMatchesFilter;
 
 /**
- * listen for messages with jira related issues and posts summary and links into chat.
- *
- * @Todo implement authentication for non public jira instances
+ * listen for messages with jira related issues and posts summary and links into chat/channel.
  */
 @MessageListenerPlugin(name="jira-issues", description="provides summary and link to jira issues when mentioned in chat")
 public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlugin> {
@@ -171,6 +169,11 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 		return "";
 	}
 
+	/**
+	 * checks if the given string matches the configured pattern
+	 * @param aString strint to test
+	 * @return true/false
+	 */
 	public boolean matches(String aString) {
 		if(pattern != null)
 			return pattern.matcher(aString).find();
@@ -182,6 +185,14 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 	 */
 	public JsonNode getCurrentIssue() { return issueNode; }
 	
+	/**
+	 * @return the configuration used by the plugin
+	 */
+	public JiraConfig getConfig() {
+		return config;
+	}
+
+
 	private void processMessage(XmppContext xmppContext, Message message) {
 
 		Matcher matcher = pattern.matcher(message.getBody());
@@ -244,10 +255,5 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 			pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 			log.info("using pattern '{}' for matching", regex);
 		}
-	}
-
-
-	public JiraConfig getConfig() {
-		return config;
 	}
 }

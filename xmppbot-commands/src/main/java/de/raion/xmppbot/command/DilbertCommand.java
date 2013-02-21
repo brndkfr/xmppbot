@@ -46,6 +46,18 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import de.raion.xmppbot.XmppContext;
 import de.raion.xmppbot.command.core.AbstractXmppCommand;
 
+/**
+ * posts dilbert strips (default: strip of the day)<br>
+ * <pre>
+ * {@code
+ *		Usage: dilbert [options]
+ *		Options:
+ *   	-r, --random   posts a random strip
+ *                     Default: false
+ * }                 
+ * @author b.kiefer
+ *
+ */
 @CLICommand(name="dilbert", description="posts dilbert strips (default: strip of the day)")
 public class DilbertCommand extends AbstractXmppCommand {
 

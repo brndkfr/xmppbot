@@ -21,7 +21,7 @@
 		<appassembler-maven-plugin-version>1.3</appassembler-maven-plugin-version>
 
 		<!-- debian packaging properties -->
-		<deb.pkgname>enbot-botson</deb.pkgname>
+		<deb.pkgname>enbot</deb.pkgname>
 	</properties>
 	
 	<dependencies>
@@ -93,7 +93,7 @@
 										<group>enbot</group>
 									</mapper>
 								</data>
-								<data>
+								<!-- <data>
 									<src>src/main/debian/etc/enbot.conf</src>
 									<type>file</type>
 									<mapper>
@@ -104,7 +104,7 @@
 										<user>enbot</user>
 										<group>enbot</group>
 									</mapper>
-								</data>
+								</data> -->
 								<data>
 									<src>src/main/debian/etc/</src>
 									<type>directory</type>

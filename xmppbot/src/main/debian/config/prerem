@@ -2,3 +2,4 @@
 
 # remove the symlinks
 sudo rm /usr/bin/enbot
+echo "symlink /usr/bin/enbot removed"

@@ -23,9 +23,7 @@ package de.raion.xmppbot;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -81,6 +79,7 @@ import de.raion.xmppbot.plugin.PluginStatusListener;
  *@see AbstractMessageListenerPlugin for plugins
  *@see MessageListenerPlugin marker annotation for plugins
  */
+
 @SuppressWarnings("rawtypes")
 @CLIEntry
 public class XmppBot extends CommandLineApplication implements ChatManagerListener, PluginStatusListener {
@@ -648,7 +647,5 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 		while(true) {
 			TimeUnit.HOURS.sleep(1);
 		}
-	
-
 	}
 }
