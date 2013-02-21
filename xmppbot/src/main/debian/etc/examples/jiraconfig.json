@@ -1,0 +1,8 @@
+{
+  "jiraDomain" : "xxxxx.atlassian.net",
+  "projectPath" : "/rest/api/latest/project",
+  "issuePath" : "/rest/api/latest/issue",
+  "browsePath" : "/browse",
+  "authenticationUser" : "user",
+  "authenticationPassword" : "password"
+}
