@@ -128,7 +128,7 @@ public class TrelloLinkBeautifierInterceptor  extends AbstractPacketInterceptor{
 					String roomId = PacketUtils.getToName(xmppMessage);
 					int index = roomId.indexOf("_");
 					if(index != -1)
-						roomId = roomId.substring(index);
+						roomId = roomId.substring(index+1);
 					
 					// nickname used by the bot for the configuration 'hipchat'
 					String nickName = getContext().getBot().getNickName(getClass().getAnnotation(PacketInterceptor.class).service());
