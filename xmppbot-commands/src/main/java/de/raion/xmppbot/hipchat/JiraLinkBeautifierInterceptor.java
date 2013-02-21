@@ -98,7 +98,11 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 					String messageText = createMessageText(xmppMessage, issue, plugin);
 										
 					// todo do better
-					String roomId = PacketUtils.getToName(xmppMessage).split("_")[1];
+					// todo do better
+					String roomId = PacketUtils.getToName(xmppMessage);
+					int index = roomId.indexOf("_");
+					if(index != -1)
+						roomId = roomId.substring(index);
 					
 					// nickname used by the bot for the configuration 'hipchat'
 					String nickName = getContext().getBot().getNickName(getClass().getAnnotation(PacketInterceptor.class).service());
