@@ -88,6 +88,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 	private Map<String, XMPPConnection> connectionMap;
 	private Map<String, MultiUserChat> multiUserChatMap;
+	private Map<MultiUserChat, String> multiUserChatKeyMap;
 	private Map<String, Chat> chatMap;
 	private HashMap<MultiUserChat, Set<String>> multiUserChatPresenceMap;
 	private ChatMessageListener messageHandler;
@@ -98,6 +99,8 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	
 	 ExecutorService executorService;
 
+	
+
 
 	/**
 	 * constructor
@@ -107,6 +110,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 		connectionMap = new HashMap<String, XMPPConnection>();
 		multiUserChatMap = new HashMap<String, MultiUserChat>();
+		multiUserChatKeyMap = new HashMap<MultiUserChat, String>();
 		chatMap = new HashMap<String, Chat>();
 		multiUserChatPresenceMap = new HashMap<MultiUserChat, Set<String>>();
 		messageHandler = new ChatMessageListener(this);
@@ -244,6 +248,72 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	 */
 	public Chat getChat(String participant) {
 		return chatMap.get(participant);
+	}
+
+
+	/**
+	 * @return configuration object of enbot
+	 */
+	public BotConfiguration getConfiguration() {
+		return configuration;
+	}
+
+
+	/**
+	 * checks if Command command is available
+	 * @param command cmd
+	 * @return true if available otherwise false
+	 */
+	public boolean hasCommand(String command) {
+		return getCommandNames().contains(command);
+	
+	}
+
+
+	public <T> void pluginDisabled(String pluginName, AbstractMessageListenerPlugin<T> plugin) {
+		
+		Collection<XMPPConnection> connections = connectionMap.values();
+	
+		for (XMPPConnection connection : connections) {
+			connection.removePacketListener(plugin);
+			log.info("plugin '{}' disabled for '{}'", pluginName, connection.toString());
+		}
+	}
+
+
+	public <T> void pluginEnabled(String pluginName, AbstractMessageListenerPlugin<T> plugin) {
+		
+		Collection<XMPPConnection> connections = connectionMap.values();
+		
+		Collection<AbstractMessageListenerPlugin> plugins = new ArrayList<AbstractMessageListenerPlugin>(1);
+		plugins.add(plugin);
+		
+		for (XMPPConnection connection : connections) {
+			addPlugins(connection, plugins);
+		}
+	}
+
+
+	/**
+	 * the Nickname  used in the configured Service
+	 * @param serviceName name of the service
+	 * @return Nickname or null if service is not configured
+	 */
+	public String getNickName(String serviceName) {
+		XmppConfiguration config = configuration.getConfigurations().get(serviceName);
+		
+		if(config != null)
+			return config.getNickName();
+		
+		return null;
+	}
+
+
+	public ExecutorService getExecutorService() { return executorService; }
+
+
+	public String getMultiUserChatKey(MultiUserChat multiUserChat) {
+		return multiUserChatKeyMap.get(multiUserChat);
 	}
 
 
@@ -406,29 +476,17 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 		return list;
 	}
 	
-	/**
-	 * the Nickname  used in the configured Service
-	 * @param serviceName name of the service
-	 * @return Nickname or null if service is not configured
-	 */
-	public String getNickName(String serviceName) {
-		XmppConfiguration config = configuration.getConfigurations().get(serviceName);
-		
-		if(config != null)
-			return config.getNickName();
-		
-		return null;
-	}
-
-
-
 	private void joinMultiUserChats(XmppConfiguration xmppConfig, XMPPConnection connection) {
 
-		Collection<String> mucNameCollection = xmppConfig.getMultiUserChats().values();
-
-		for (String mucName : mucNameCollection) {
+		Map<String, String> mucMap = xmppConfig.getMultiUserChats();
+		Set<String> keySet = mucMap.keySet();
+		
+		for (String key : keySet) {
+			
+			String mucAddress = mucMap.get(key);
+			
 			try {
-				if (packetInterceptorMap.containsKey(xmppConfig.getServiceType())) {
+				 if (packetInterceptorMap.containsKey(xmppConfig.getServiceType())) {
 					
 					List<Class<PacketInterceptor>> interceptorList = packetInterceptorMap.get(xmppConfig.getServiceType()); 
 					
@@ -443,7 +501,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 				// start TODO remove workareound handly of muclistener
 				DiscussionHistory history = new DiscussionHistory();
 				history.setMaxStanzas(0);
-				MultiUserChat muc = new MultiUserChat(connection, mucName);
+				MultiUserChat muc = new MultiUserChat(connection, mucAddress);
 
 				if(multiUserChatListenerMap.containsKey(xmppConfig.getServiceType())) {
 					Class<MultiUserChatListener> mucListenerClass = multiUserChatListenerMap.get(xmppConfig.getServiceType());
@@ -454,9 +512,11 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 				muc.join(xmppConfig.getNickName(), xmppConfig.getPassword(), history,
 						SmackConfiguration.getPacketReplyTimeout());
-				log.info("joined multiuserchat '{}' with address {}", mucName, muc.getRoom());
+				log.info("joined multiuserchat '{}' with address {}", mucAddress, muc.getRoom());
 
-				this.multiUserChatMap.put(mucName, muc);
+				multiUserChatMap.put(mucAddress, muc);
+				multiUserChatKeyMap.put(muc, key);
+				
 
 				// TODO maybe removing
 				Iterator<String> it = muc.getOccupants();
@@ -466,7 +526,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 				}
 
 			} catch (Exception e) {
-				log.error("Exception caught in joinChannels for multiuserchat '{}' : {}", mucName, e.getMessage() );
+				log.error("Exception caught in joinChannels for multiuserchat '{}' : {}", mucAddress, e.getMessage() );
 			}
 		}
 	}
@@ -556,8 +616,6 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 		}
 	}
 
-	public ExecutorService getExecutorService() { return executorService; }
-
 	/**
 	 * <b>does nothing! disables shutdown</b>
 	 * @see net.dharwin.common.tools.cli.api.CommandLineApplication#shutdown()
@@ -567,47 +625,6 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 	@Override
 	protected CLIContext createContext() { return new XmppContext(this); }
-
-
-	/**
-	 * @return configuration object of enbot
-	 */
-	public BotConfiguration getConfiguration() {
-		return configuration;
-	}
-
-	/**
-	 * checks if Command command is available
-	 * @param command cmd
-	 * @return true if available otherwise false
-	 */
-	public boolean hasCommand(String command) {
-		return getCommandNames().contains(command);
-
-	}
-
-	public <T> void pluginDisabled(String pluginName, AbstractMessageListenerPlugin<T> plugin) {
-		
-		Collection<XMPPConnection> connections = connectionMap.values();
-
-		for (XMPPConnection connection : connections) {
-			connection.removePacketListener(plugin);
-			log.info("plugin '{}' disabled for '{}'", pluginName, connection.toString());
-		}
-	}
-
-
-	public <T> void pluginEnabled(String pluginName, AbstractMessageListenerPlugin<T> plugin) {
-		
-		Collection<XMPPConnection> connections = connectionMap.values();
-		
-		Collection<AbstractMessageListenerPlugin> plugins = new ArrayList<AbstractMessageListenerPlugin>(1);
-		plugins.add(plugin);
-		
-		for (XMPPConnection connection : connections) {
-			addPlugins(connection, plugins);
-		}
-	}
 
 
 	/**

@@ -204,6 +204,11 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 
 	}
 
+	public void getMultiUserChatName() {
+		
+		
+	}
+
 	/**
 	 * set the printwriter for the current thread in the XmppContext
 	 * and also in the XmppCommands
@@ -398,6 +403,11 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 
 	public void removeChat() {
 		chatThreadLocal.remove();
+		
+	}
+
+	public String getMultiUserChatKey(MultiUserChat multiUserChat) {
+		return xmppBot.getMultiUserChatKey(multiUserChat);
 		
 	}
 }

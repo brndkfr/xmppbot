@@ -41,7 +41,6 @@ import de.raion.xmppbot.AbstractPacketInterceptor;
 import de.raion.xmppbot.annotation.PacketInterceptor;
 import de.raion.xmppbot.plugin.JiraIssuePlugin;
 import de.raion.xmppbot.plugin.PluginManager;
-import de.raion.xmppbot.util.PacketUtils;
 
 /**
  * 
@@ -99,7 +98,8 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 										
 					// todo do better
 					// todo do better
-					String roomId = PacketUtils.getToName(xmppMessage);
+					String roomId = getRoomId();
+					
 					int index = roomId.indexOf("_");
 					if(index != -1)
 						roomId = roomId.substring(index+1);
@@ -122,20 +122,30 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 					
 					if(response.getClientResponseStatus() == Status.OK) {
 						log.info("sent message for issue [{}] to room {}", issueKey, roomId );
+						
+						// this is a hack :(
+						xmppMessage.setBody(null);
+						throw new IllegalArgumentException("JiraLinkBeautifier: preventing message sending via xmpp. message already sent via hipchat web api");
 					}
 					else {
 						log.warn("sending message for {} failed, status = {}", "["+issueKey+"] to "+roomId, response.getStatus());
 						log.warn(response.getEntity(String.class));
 					}
-					
-					
-					// this is a hack :(
-					xmppMessage.setBody(null);
-					throw new IllegalArgumentException("JiraLinkBeautifier: preventing message sending via xmpp. message already sent via hipchat web api");
 				}
 			}
 		}
+	}
+
+	@Override
+	public PacketFilter getPacketFilter() {
+		return new PacketTypeFilter(Message.class);
+	}
+
+	private String getRoomId() {
+		if(getContext().isMultiUserChatBound())
+			return getContext().getMultiUserChatKey(getContext().getMultiUserChat());
 		
+		return null;
 	}
 
 	// TODO better solution
@@ -214,14 +224,6 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 		builder.append(" - ").append(issueSummary);
 		return builder.toString();
 		
-	}
-
-	
-	
-
-	@Override
-	public PacketFilter getPacketFilter() {
-		return new PacketTypeFilter(Message.class);
 	}
 
 }

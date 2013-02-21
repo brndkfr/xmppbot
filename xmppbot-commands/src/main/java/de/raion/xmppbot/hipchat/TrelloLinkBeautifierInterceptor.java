@@ -125,10 +125,7 @@ public class TrelloLinkBeautifierInterceptor  extends AbstractPacketInterceptor{
 					String messageText = createMessageText(shortUrl, cardNode);
 					
 					// todo do better
-					String roomId = PacketUtils.getToName(xmppMessage);
-					int index = roomId.indexOf("_");
-					if(index != -1)
-						roomId = roomId.substring(index+1);
+					String roomId = getRoomId();
 					
 					// nickname used by the bot for the configuration 'hipchat'
 					String nickName = getContext().getBot().getNickName(getClass().getAnnotation(PacketInterceptor.class).service());
@@ -147,20 +144,18 @@ public class TrelloLinkBeautifierInterceptor  extends AbstractPacketInterceptor{
 
 					if(response.getClientResponseStatus() == Status.OK) {
 						log.info("sent message for issue [{}] to room {}", shortId, roomId );
+						
+						// this is a hack :(
+						xmppMessage.setBody(null);
+						throw new IllegalArgumentException("TrelloLinkBeautifier: preventing message sending via xmpp. message already sent via hipchat web api");
+						
 					}
 					else {
 						log.warn("sending message for {} failed, status = {}", "["+shortId+"] to "+roomId, response.getStatus());
 						log.warn(response.getEntity(String.class));
 					}
-					
-					
-				
 				} catch (Exception e) {
 					log.error(e.getMessage());
-				}finally {
-					// this is a hack :(
-					xmppMessage.setBody(null);
-					throw new IllegalArgumentException("TrelloLinkBeautifier: preventing message sending via xmpp. message already sent via hipchat web api");
 				}
 			}
 			
@@ -218,6 +213,12 @@ public class TrelloLinkBeautifierInterceptor  extends AbstractPacketInterceptor{
 		return builder.toString();
 	}
 
+	private String getRoomId() {
+		if(getContext().isMultiUserChatBound())
+			return getContext().getMultiUserChatKey(getContext().getMultiUserChat());
+		
+		return null;
+	}
 
 	private static Color getColor(String colorName) {
 		colorName = colorName.toLowerCase();
