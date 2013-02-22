@@ -93,25 +93,24 @@
 										<group>enbot</group>
 									</mapper>
 								</data>
-								<!-- <data>
+								<data>
 									<src>src/main/debian/etc/enbot.conf</src>
 									<type>file</type>
+									<dst>etc/enbot/enbot.conf</dst>
 									<mapper>
 										<type>perm</type>
-										<prefix>/etc/enbot</prefix>
-										<strip>1</strip>
 										<filemode>660</filemode>
 										<user>enbot</user>
 										<group>enbot</group>
 									</mapper>
-								</data> -->
+								</data>
 								<data>
-									<src>src/main/debian/etc/</src>
+									<src>src/main/debian/etc/templates</src>
 									<type>directory</type>
-									<includes>*/**</includes>
+									<includes>*</includes>
 									<mapper>
 										<type>perm</type>
-										<prefix>/etc/enbot</prefix>
+										<prefix>/etc/enbot/templates</prefix>
 										<strip>1</strip>
 										<filemode>660</filemode>
 										<user>enbot</user>
