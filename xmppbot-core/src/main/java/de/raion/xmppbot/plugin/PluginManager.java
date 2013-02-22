@@ -203,6 +203,15 @@ public class PluginManager {
 
 
 
+	public void saveConfig() {
+		try {
+			context.saveConfig(pluginConfig);
+		} catch (IOException e) {
+			log.warn("error occured when trying to save pluginconfig.json, message = {}", e.getMessage());
+		}
+	}
+
+
 	private Boolean setPluginState(String key, Boolean state) {
 		if(pluginConfig.containsKey(key)) {
 			pluginConfig.setStatus(key, state);

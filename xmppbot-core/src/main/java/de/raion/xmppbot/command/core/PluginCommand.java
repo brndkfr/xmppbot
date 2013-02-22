@@ -19,6 +19,7 @@ package de.raion.xmppbot.command.core;
  * #L%
  */
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import com.beust.jcommander.Parameter;
 import de.raion.xmppbot.XmppContext;
 import de.raion.xmppbot.plugin.AbstractMessageListenerPlugin;
 import de.raion.xmppbot.plugin.MessageListenerPlugin;
+import de.raion.xmppbot.plugin.PluginConfig;
 import de.raion.xmppbot.plugin.PluginManager;
 
 /**
@@ -68,7 +70,7 @@ public class PluginCommand extends AbstractXmppCommand {
 
 	@Override
 	public void executeCommand(XmppContext context) {
-
+		
 		if(showList) {
 			printPluginList(context);
 		}
@@ -82,8 +84,9 @@ public class PluginCommand extends AbstractXmppCommand {
 		if(plugins2Enable.size() > 0) {
 			enablePlugins(plugins2Enable, context);
 		}
+	
 	}
-
+		
 
 	private void enablePlugins(List<String> plugins2Disable2, XmppContext context) {
 		PluginManager pluginManager = context.getPluginManager();
@@ -95,6 +98,7 @@ public class PluginCommand extends AbstractXmppCommand {
 				println("couldn't enable plugin");
 			}
 		}
+		pluginManager.saveConfig();
 	}
 
 
@@ -108,6 +112,7 @@ public class PluginCommand extends AbstractXmppCommand {
 				println("couldn't disable plugin");
 			}
 		}
+		pluginManager.saveConfig();
 	}
 
 	@SuppressWarnings("rawtypes")
