@@ -2,10 +2,21 @@ Enbot Downloads
 
     The downloads are hosted via {{{https://bintray.com/}Bintray.com}}.
 
-* Debian Packages
+* Debian Packages for Installation
 
     Download Section: {{{http://dl.bintray.com/content/bkiefer/enbot}available Debian Packages}}
 
 * Maven Artifacts
+
+    Repository: {{{http://dl.bintray.com/content/bkiefer/enbot-maven}enbot-maven}}
+
+----
+        <repository>
+            <id>bintray-enbot-maven</id>
+            <name>enbot maven repository at bintray</name>
+            <url>http://dl.bintray.com/content/bkiefer/enbot-maven</url>
+        </repository>
+----
+
 
 

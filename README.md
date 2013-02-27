@@ -1,16 +1,24 @@
-Enbot Botson 
-============ 
-<b>(aka xmppbot)</b>
+Enbot - a XMPP bot
+============
 
-- a lot of work to do
-- perparing release and packaging.
-- documentation will follow
+Download
+
+- Debian installation packages available [here] (http://dl.bintray.com/content/bkiefer/enbot)
 
 
-Installing on Ubuntu (currently not working!)
+Installing on Ubuntu
 - tested on Ubuntu 12.04 only
 
-wget https://github.com/brndkfr/xmppbot/downloads/<enbot-botson_<version>.deb
 
-sudo dpkg -i <enbot-botson_<version>.deb
+sudo dpkg -i <enbot-_<version>.deb
 
+
+Maven Repository
+
+- [Repository at Bintray.com] (http://dl.bintray.com/content/bkiefer/enbot-maven}enbot-maven)
+
+        <repository>
+            <id>bintray-enbot-maven</id>
+            <name>enbot maven repository at bintray</name>
+            <url>http://dl.bintray.com/content/bkiefer/enbot-maven</url>
+        </repository>

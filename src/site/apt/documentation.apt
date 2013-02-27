@@ -1,0 +1,28 @@
+Documentation
+
+*   {Installation}
+
+    Download an Enbot version as Debian Package, see {download.html}
+
+    Install it with
+
+----
+    sudo dpkg -i enbot-x.x.x_build-yyyyMMdd-HHmm.deb
+----
+
+
+*   {Configuration}
+
+    The configuration files reside in
+
+----
+    /etc/enbot
+----
+
+    templates for configuration are available in
+
+----
+    /etc/enbot/templates
+----
+
+

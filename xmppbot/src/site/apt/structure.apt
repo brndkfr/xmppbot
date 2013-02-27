@@ -1,0 +1,50 @@
+Package Structure
+
+----
+├── DEBIAN
+│   ├── conffiles
+│   ├── control
+│   ├── copyright
+│   ├── md5sums
+│   ├── postinst                                        # executed after install
+│   ├── preinst                                         # executed before install
+│   └── prerem                                          # executed before removing
+├── etc
+│   ├── enbot                                           # enbot configuration directory
+│   │   ├── enbot.conf
+│   │   └── templates                                   # templates for bot and plugin/command configuration
+│   │       ├── enbot.json
+│   │       ├── hipchatapiconfig.json
+│   │       ├── jiraconfig.json
+│   │       └── slapconfig.json
+│   └── init
+│       └── enbot.conf                                  # upstart script
+└── usr
+    └── local
+        └── lib
+            └── enbot
+                ├── bin
+                │   └── enbot.sh                        # start/stop script
+                └── libs
+                    ├── annovention-1.0.jar
+                    ├── cli-api-1.0.jar
+                    ├── jackson-annotations-2.0.2.jar
+                    ├── jackson-core-2.0.2.jar
+                    ├── jackson-databind-2.0.2.jar
+                    ├── javassist-3.15.0-GA.jar
+                    ├── jcommander-1.29.jar
+                    ├── jersey-client-1.9.1.jar
+                    ├── jersey-core-1.9.1.jar
+                    ├── jline-0.9.94.jar
+                    ├── joda-time-2.1.jar
+                    ├── jsoup-1.6.3.jar
+                    ├── junit-3.8.1.jar
+                    ├── logback-classic-1.0.3.jar
+                    ├── logback-core-1.0.3.jar
+                    ├── slf4j-api-1.6.4.jar
+                    ├── smack-3.2.1.jar
+                    ├── smackx-3.2.1.jar
+                    ├── smackx-debug-3.2.1.jar
+                    ├── xmppbot-commands-0.6.0.jar
+                    └── xmppbot-core-0.6.0.jar
+----

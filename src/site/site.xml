@@ -72,6 +72,8 @@
 		<item name="Overview" href="index.html"/>
         <item name="Download" href="download.html"/>
         <item name="Documentation" href="documentation.html">
+            <item name="Installation" href="documentation.html#installation"/>
+            <item name="Configuration" href="documentation.html#configuration"/>
             <item name="Javadoc" href="apidocs/index.html"/>
         </item>
 
@@ -79,11 +81,13 @@
 	
 	<menu ref="modules"/>
 	<menu ref="reports"/>
-	<!--
-    <breadcrumbs>
-      <item name=.. href=.. img=.. position=.. alt=.. border=.. width=.. height=.. target=.. title=.. />
-    </breadcrumbs>
 
+    <breadcrumbs>
+      <item name="main" href="index.html" />
+      <item name="core" href="xmppbot-core/index.html" />
+      <item name="commands" href="xmppbot-commands/index.html" />
+  </breadcrumbs>
+    <!--
     <menu name=.. inherit=.. inheritAsRef=.. ref=.. img=.. alt=.. position=.. border=.. width=.. height=.. title=.. >
       <item collapse=.. ref=.. name=.. href=.. img=.. position=.. alt=.. border=.. width=.. height=.. target=.. title=.. >
         <description/>

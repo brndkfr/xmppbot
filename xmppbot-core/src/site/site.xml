@@ -68,8 +68,9 @@
 	
     <breadcrumbs>
      <!-- <item name="core".. href=.. img=.. position=.. alt=.. border=.. width=.. height=.. target=.. title=.. />-->
-	  <item name="xmpp-core" href="xmppbot-core/index.html" />
-	  <item name="xmpp-core2" href="xmppbot-core/index.html" />
+	  <item name="main" href="../index.html" />
+	  <item name="core" href="index.html" />
+      <item name="commands" href="./../xmppbot-commands/index.html" />
     </breadcrumbs>
     <!-- 
     <menu name=.. inherit=.. inheritAsRef=.. ref=.. img=.. alt=.. position=.. border=.. width=.. height=.. title=.. >
