@@ -5,14 +5,14 @@
 	<artifactId>xmppbot-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>0.6.0</version>
-	<name>Enbot Botson</name>
-	<description>a xmppbot named Enbot</description>
+	<name>Enbot - a XMPP bot</name>
+	<description>Enbot - a XMPP bot</description>
 	<url>http://github.com/brndkfr/xmppbot</url>
 	<inceptionYear>2012</inceptionYear>
 	<distributionManagement>
 		<site>
-			<id>raion.de</id>
-			<url>http://raion.de/xmppbot</url>
+			<id>brndkfr.github.com</id>
+			<url>http://brndkfr.github.com/xmppbot</url>
 		</site>
 	</distributionManagement>
 	<licenses>
@@ -22,30 +22,28 @@
 		</license>
 	</licenses>
 	<organization>
-		<url>http://raion.de</url>
-		<name>Bernd Kiefer &lt;b.kiefer@raion.de&gt;</name>
+		<url>brndkfr.github.com/xmppbot</url>
+		<name>Bernd Kiefer &lt;b.kiefer[at]raion[dot]de&gt;</name>
 	</organization>
 	
 	<developers>
 		<developer>
 			<id>1</id>
 			<name>Bernd Kiefer</name>
-			<email>b.kiefer@raion.de</email>
-			<url>http://raion.de</url>
+			<email>b[dot]kiefer[at]raion[dot]de</email>
+			<url>http://github.com/brndkfr</url>
 			<roles>
 				<role>Dev</role>
 			</roles>
 		</developer>
-		<developer>
-			<id>2</id>
-			<name>Cedric Meury</name>
-			<email>cm@wurmlo.ch</email>
-			<url>http://www.cedric-meury.ch/</url>
-			<roles>
-				<role>Contributor</role>
-			</roles>
-		</developer>
-	</developers>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Cedric Meury</name>
+            <email>cm[at]wurmlo[dot]ch</email>
+            <url>http://www.cedric-meury.ch/</url>
+        </contributor>
+    </contributors>
 
 	<scm>
 		<url>https://github.com/brndkfr/xmppbot.git</url>
@@ -93,7 +91,7 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<plugin>
+				<!-- <plugin>
 					<artifactId>maven-clean-plugin</artifactId>
 					<version>${maven-clean-plugin-vesion}</version>
 					<executions>
@@ -105,7 +103,7 @@
 							</goals>
 						</execution>
 					</executions>
-				</plugin>
+				</plugin> -->
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>license-maven-plugin</artifactId>
@@ -214,6 +212,19 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<!-- <plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+			</plugin> -->
+		</plugins>			
 	</build>
 	<reporting>
 		<plugins>

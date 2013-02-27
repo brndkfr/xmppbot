@@ -35,6 +35,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ import de.raion.xmppbot.XmppContext;
 import de.raion.xmppbot.command.core.AbstractXmppCommand;
 
 /**
- * posts dilbert strips (default: strip of the day)<br>
+ * posts dilbert strips (default: strip of the day)<br><br>
  * <pre>
  * {@code
  *		Usage: dilbert [options]

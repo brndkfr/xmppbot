@@ -40,4 +40,5 @@
 		</dependency>
 	</dependencies>
 
+	<url>https://github.com/brndkfr/xmppbot/tree/master/xmppbot-commands</url>
 </project>

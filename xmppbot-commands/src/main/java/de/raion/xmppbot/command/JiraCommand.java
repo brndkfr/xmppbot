@@ -38,7 +38,7 @@ import de.raion.xmppbot.command.core.AbstractXmppCommand;
 import de.raion.xmppbot.plugin.JiraIssuePlugin;
 
 /**
- * configures the jira-issue plugin<br>
+ * configures the jira-issue plugin<br><br>
  * <pre>
  * {@code
 	  Usage: jira [options]

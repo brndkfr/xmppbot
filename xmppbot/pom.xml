@@ -19,6 +19,7 @@
 		<maven-assembly-plugin-version>2.3</maven-assembly-plugin-version>
 		<jdeb-version>0.11</jdeb-version>
 		<appassembler-maven-plugin-version>1.3</appassembler-maven-plugin-version>
+		<maven-timestamp-plugin-version>1.0</maven-timestamp-plugin-version>
 
 		<!-- debian packaging properties -->
 		<deb.pkgname>enbot</deb.pkgname>
@@ -76,7 +77,7 @@
 							<goal>jdeb</goal>
 						</goals>
 						<configuration>
-							<deb>${project.build.directory}/${deb.pkgname}_${project.version}.deb</deb>
+							<deb>${project.build.directory}/${deb.pkgname}_${project.version}_build-${build.timestamp}.deb</deb>
 							<controlDir>${basedir}/src/main/debian/config</controlDir>
 							<installDir>/usr/local/lib/enbot/</installDir>
 							<verbose>true</verbose>
@@ -147,7 +148,7 @@
 					</execution>
 				</executions>
 			</plugin>
-					 <plugin>
+		<plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>appassembler-maven-plugin</artifactId>
         <version>${appassembler-maven-plugin-version}</version>        
@@ -219,8 +220,24 @@
           </execution>
         </executions>
       </plugin>
-		</plugins>
-		<pluginManagement>
+      <plugin>
+	   <groupId>com.keyboardsamurais.maven</groupId>
+	   <artifactId>maven-timestamp-plugin</artifactId>
+	   <version>${maven-timestamp-plugin-version}</version>
+	   <configuration>
+		    <propertyName>build.timestamp</propertyName>
+		    <timestampPattern>yyyyMMdd-HHmmss</timestampPattern>
+		</configuration>
+		<executions>
+			<execution>
+		     <goals>
+		      <goal>create</goal>
+		     </goals>
+		    </execution>
+		</executions>
+	  </plugin>
+	</plugins>
+	<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
 				<plugin>

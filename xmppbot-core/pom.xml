@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>xmppbot-core</artifactId>
 	<name>XmppBot Core</name>
-	<url>http://raion.de/xmppbot</url>
+	<url>https://github.com/brndkfr/xmppbot/tree/master/xmppbot-core</url>
 	<description>core functionalities and basic set of commands</description>
 	
 	<properties>

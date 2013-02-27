@@ -2,7 +2,11 @@
 xmppbot-core/*.json
 xmppbot-commands/bin/
 xmppbot-core/bin/
+logger.basedir_IS_UNDEFINED
 
+# intellij idea
+.idea
+*.iml
 
 #################
 ## Eclipse
