@@ -3,7 +3,7 @@ Enbot - a XMPP bot
 
 Documentation
 -------------
-<https://brndkfr.github.com/xmppbot/>
+<http://brndkfr.github.com/xmppbot/>
 
 
 Download
