@@ -3,6 +3,7 @@ xmppbot-core/*.json
 xmppbot-commands/bin/
 xmppbot-core/bin/
 logger.basedir_IS_UNDEFINED
+workingdir/
 
 # intellij idea
 .idea
