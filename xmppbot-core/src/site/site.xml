@@ -65,22 +65,6 @@
    	<menu name="Overview" ref="index.html"/>
 	<menu ref="modules"/>
 	<menu ref="reports"/>
-	
-    <breadcrumbs>
-     <!-- <item name="core".. href=.. img=.. position=.. alt=.. border=.. width=.. height=.. target=.. title=.. />-->
-	  <item name="main" href="../index.html" />
-	  <item name="core" href="index.html" />
-      <item name="commands" href="./../xmppbot-commands/index.html" />
-    </breadcrumbs>
-    <!-- 
-    <menu name=.. inherit=.. inheritAsRef=.. ref=.. img=.. alt=.. position=.. border=.. width=.. height=.. title=.. >
-      <item collapse=.. ref=.. name=.. href=.. img=.. position=.. alt=.. border=.. width=.. height=.. target=.. title=.. >
-        <description/>
-        <item>...recursion...<item>
-      </item>
-    </menu>
-    <footer/>
-	-->
   </body>
 
   <custom/>

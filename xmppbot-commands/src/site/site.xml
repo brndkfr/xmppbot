@@ -62,10 +62,7 @@
 
   <body>
     <head/>
-    <links>
-      <item name="item1" href="item1.html"/> <!-- img=.. position=.. alt=.. border=.. width=.. height=.. target=.. title=.. /> -->
-    </links>
-	
+
 	<menu ref="modules"/>
 	<menu ref="reports"/>
 	<!--

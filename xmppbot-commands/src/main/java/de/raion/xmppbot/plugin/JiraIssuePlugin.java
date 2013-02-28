@@ -200,6 +200,7 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 		while(matcher.find()) {
 
 			String issue = matcher.group();
+            log.debug("issue: {}", issue);
 
 			try {
 
@@ -246,6 +247,7 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 
 		if(log.isDebugEnabled()) {
 			client.addFilter(new LoggingFilter());
+            log.info("loggingfilter added for http requests");
 		}
 
 		String regex = config.getMatchingPattern();

@@ -11,7 +11,7 @@
 	<inceptionYear>2012</inceptionYear>
 	<distributionManagement>
 		<site>
-			<id>brndkfr.github.com</id>
+			<id>brndkfr.github.com/xmppbot</id>
 			<url>http://brndkfr.github.com/xmppbot</url>
 		</site>
         <repository>
@@ -27,7 +27,7 @@
 		</license>
 	</licenses>
 	<organization>
-		<url>brndkfr.github.com/xmppbot</url>
+		<url>https://github.com/brndkfr</url>
 		<name>Bernd Kiefer &lt;b.kiefer[at]raion[dot]de&gt;</name>
 	</organization>
 	
