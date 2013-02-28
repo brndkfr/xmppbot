@@ -67,6 +67,11 @@ public abstract class AbstractMessageListenerPlugin<T> implements PacketListener
 			final MultiUserChat muc = xmppBot.getMultiUserChat(getFromAddress(packet));
 			final Chat chat = xmppBot.getChat(packet.getFrom().trim());
 
+            if(muc == null)
+                log.debug("muc is null, from={}", packet.getFrom());
+            if(chat == null)
+                log.debug("chat is null, from={}", packet.getFrom());
+
 			Runnable runnable = new Runnable() {
 				public void run() {
 

@@ -180,9 +180,14 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 	 */
 	public void println(String aString) {
 
-		if(XmppContext.printWriterThreadLocal.get() != null ) {
+        log.debug("println({})", aString);
+
+		if(printWriterThreadLocal.get() != null ) {
 			printWriterThreadLocal.get().println(aString);
 		}
+        else {
+            log.warn("no printwriter set in thread {}", Thread.currentThread().getName());
+        }
 	}
 
 

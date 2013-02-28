@@ -173,9 +173,19 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 		String reporterAcnt = issue.path("fields").path("reporter").get("name").asText();
 		String reporterName = issue.path("fields").path("reporter").get("displayName").asText();
 		String reporterIcon = issue.path("fields").path("reporter").path("avatarUrls").get("16x16").asText();
-		String assigneeAcnt = issue.path("fields").path("assignee").get("name").asText();
-		String assigneeName = issue.path("fields").path("assignee").get("displayName").asText();
-		String assigneeIcon = issue.path("fields").path("assignee").path("avatarUrls").get("16x16").asText();
+
+        String assigneeAcnt = null;
+        String assigneeName = null;
+        String assigneeIcon = null;
+
+        JsonNode assignee = issue.path("fields").path("assignee");
+        if(!assignee.isMissingNode()) {
+            assigneeAcnt = issue.path("fields").path("assignee").get("name").asText();
+            assigneeName = issue.path("fields").path("assignee").get("displayName").asText();
+            assigneeIcon = issue.path("fields").path("assignee").path("avatarUrls").get("16x16").asText();
+        }
+
+
 		
 		String line = xmppMessage.getBody();
 		int index = line.indexOf("http");
@@ -201,9 +211,13 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 	
 		builder.append(createAnchorTag(reporterName, createProfileUrl(plugin.getConfig().getJiraDomain(), reporterAcnt)));
 		builder.append(" ").append(createImageTag(reporterIcon, reporterName));
-		builder.append(". Current assignee is ");
-		builder.append(createAnchorTag(assigneeName, createProfileUrl(plugin.getConfig().getJiraDomain(), assigneeAcnt)));
-		builder.append(" ").append(createImageTag(assigneeIcon, assigneeName));
+
+        if(!assignee.isMissingNode()) {
+            builder.append(". Current assignee is ");
+            builder.append(createAnchorTag(assigneeName, createProfileUrl(plugin.getConfig().getJiraDomain(), assigneeAcnt)));
+            builder.append(" ").append(createImageTag(assigneeIcon, assigneeName));
+        }
+
 				
 		return builder.toString();
 	}

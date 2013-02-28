@@ -205,6 +205,7 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 			try {
 
 				URI issueUri = config.getIssueURI(issue);
+                log.debug("issueURI={}", issueUri.toString());
 
 				ClientResponse response = client.resource(issueUri).get(ClientResponse.class);
 
@@ -217,13 +218,16 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 					builder.append(issueSummary).append(" : ");
 					builder.append(config.getIssueBrowseURI(issue).toString()).append("\n");
 
+                    log.debug(builder.toString());
+
 					xmppContext.println(builder.toString());
 				}
 
 
 
 			} catch (Exception e) {
-				log.error("processMessage(XmppContext, Message) - {}", e.getMessage());
+				log.error("processMessage(XmppContext, Message)", e);
+
 			}
 		}
 	}
