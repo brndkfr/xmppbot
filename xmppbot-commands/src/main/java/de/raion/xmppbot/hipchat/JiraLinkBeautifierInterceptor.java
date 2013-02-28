@@ -23,6 +23,7 @@ package de.raion.xmppbot.hipchat;
 import static de.raion.xmppbot.command.util.HtmlUtils.createAnchorTag;
 import static de.raion.xmppbot.command.util.HtmlUtils.createImageTag;
 
+import com.fasterxml.jackson.databind.node.NullNode;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
@@ -179,11 +180,18 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
         String assigneeIcon = null;
 
         JsonNode assignee = issue.path("fields").path("assignee");
-        if(!assignee.isMissingNode()) {
-            assigneeAcnt = issue.path("fields").path("assignee").get("name").asText();
-            assigneeName = issue.path("fields").path("assignee").get("displayName").asText();
-            assigneeIcon = issue.path("fields").path("assignee").path("avatarUrls").get("16x16").asText();
+        //log.debug(assignee.toString());
+        //log.debug("Nullnode = {}", assignee.isNull());
+        if(! (assignee == NullNode.getInstance()) ) {
+            if(!assignee.get("name").isMissingNode())
+                assigneeAcnt = assignee.get("name").asText();
+            if(!assignee.get("displayName").isMissingNode())
+                assigneeName = assignee.get("displayName").asText();
+            if(!assignee.get("avatarUrls").isMissingNode())
+                assigneeIcon = assignee.path("avatarUrls").get("16x16").asText();
         }
+
+
 
 
 		
@@ -212,7 +220,7 @@ public class JiraLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 		builder.append(createAnchorTag(reporterName, createProfileUrl(plugin.getConfig().getJiraDomain(), reporterAcnt)));
 		builder.append(" ").append(createImageTag(reporterIcon, reporterName));
 
-        if(!assignee.isMissingNode()) {
+        if(assigneeAcnt != null) {
             builder.append(". Current assignee is ");
             builder.append(createAnchorTag(assigneeName, createProfileUrl(plugin.getConfig().getJiraDomain(), assigneeAcnt)));
             builder.append(" ").append(createImageTag(assigneeIcon, assigneeName));

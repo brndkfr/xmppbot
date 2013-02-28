@@ -226,7 +226,7 @@ public class JiraIssuePlugin extends AbstractMessageListenerPlugin<JiraIssuePlug
 
 
 			} catch (Exception e) {
-				log.error("processMessage(XmppContext, Message)", e);
+				log.error("processMessage(XmppContext, Message)", e.getMessage());
 
 			}
 		}
