@@ -22,7 +22,7 @@ package de.raion.xmppbot.config;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.TreeSet;
 
 
 /**
@@ -49,7 +49,7 @@ public class XmppConfiguration {
 
 	private Map<String, String> chats = new HashMap<String,String>();
 
-    private ArrayList<String>  ignoreMessagesFrom = new ArrayList<String>();
+    private TreeSet<String> ignoreMessagesFrom = new TreeSet<String>();
 
 
 
@@ -201,11 +201,11 @@ public class XmppConfiguration {
 	}
 
 
-    public ArrayList<String> getIgnoreMessagesFrom() {
+    public TreeSet<String> getIgnoreMessagesFrom() {
         return ignoreMessagesFrom;
     }
 
-    public void setIgnoreMessagesFrom(ArrayList<String> ignoreMessagesFrom) {
+    public void setIgnoreMessagesFrom(TreeSet<String> ignoreMessagesFrom) {
         this.ignoreMessagesFrom = ignoreMessagesFrom;
     }
 

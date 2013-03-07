@@ -89,6 +89,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	private Map<String, XMPPConnection> connectionMap;
 	private Map<String, MultiUserChat> multiUserChatMap;
 	private Map<MultiUserChat, String> multiUserChatKeyMap;
+    private Map<MultiUserChat, String> multiUserChatConnectionKeyMap;
 	private Map<String, Chat> chatMap;
 	private HashMap<MultiUserChat, Set<String>> multiUserChatPresenceMap;
 	private ChatMessageListener messageHandler;
@@ -111,6 +112,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 		connectionMap = new HashMap<String, XMPPConnection>();
 		multiUserChatMap = new HashMap<String, MultiUserChat>();
 		multiUserChatKeyMap = new HashMap<MultiUserChat, String>();
+        multiUserChatConnectionKeyMap = new HashMap<MultiUserChat, String>();
 		chatMap = new HashMap<String, Chat>();
 		multiUserChatPresenceMap = new HashMap<MultiUserChat, Set<String>>();
 		messageHandler = new ChatMessageListener(this);
@@ -317,6 +319,11 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	}
 
 
+    public String getConnectionKey(MultiUserChat multiuserChat) {
+        return multiUserChatConnectionKeyMap.get(multiuserChat);
+    }
+
+
 	/**
 	 * Load the necessary commands for this application.
 	 *
@@ -430,7 +437,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 				connection.login(jabberId, pwd);
 				log.info("logged in with name '{}'", jabberId);
 
-				joinMultiUserChats(xmppConfig, connection);
+				joinMultiUserChats(key, xmppConfig, connection);
 				joinChats(xmppConfig, connection);
 
 				aConnectionMap.put(key, connection);
@@ -483,7 +490,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 		return list;
 	}
 	
-	private void joinMultiUserChats(XmppConfiguration xmppConfig, XMPPConnection connection) {
+	private void joinMultiUserChats(String connectionKey, XmppConfiguration xmppConfig, XMPPConnection connection) {
 
 		Map<String, String> mucMap = xmppConfig.getMultiUserChats();
 		Set<String> keySet = mucMap.keySet();
@@ -523,6 +530,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 				multiUserChatMap.put(mucAddress, muc);
 				multiUserChatKeyMap.put(muc, key);
+                multiUserChatConnectionKeyMap.put(muc, connectionKey);
 				
 
 				// TODO maybe removing

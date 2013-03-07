@@ -71,6 +71,7 @@ public abstract class AbstractMultiUserChatListener implements PacketListener {
 		final XmppBot bot = this.xmppBot;
 		final MultiUserChat muc = this.xmppBot.getMultiUserChat(getFromAddress(packet));
 
+
 		Runnable runnable = null;
 
 		if (packet instanceof Message) {

@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Set;
 
+import de.raion.xmppbot.config.XmppConfiguration;
 import net.dharwin.common.tools.cli.api.CLIContext;
 
 import org.jivesoftware.smack.Chat;
@@ -415,4 +416,12 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 		return xmppBot.getMultiUserChatKey(multiUserChat);
 		
 	}
+
+    public String getConnectionKey(MultiUserChat multiuserChat) {
+           return xmppBot.getConnectionKey(multiuserChat);
+    }
+
+    public XmppConfiguration getConnectionConfiguration(String connectionKey) {
+        return xmppBot.getConfiguration().getConfigurations().get(connectionKey);
+    }
 }

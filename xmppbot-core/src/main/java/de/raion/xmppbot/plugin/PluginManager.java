@@ -236,7 +236,10 @@ public class PluginManager {
 
 		for (String key : keySet) {
 			if(pluginConfig.get(key).equals(state)) {
-				map.put(key, plugins.get(key));
+				if(plugins.containsKey(key)) {
+                    map.put(key, plugins.get(key));
+                }
+
 			}
 		}
 		return map;
