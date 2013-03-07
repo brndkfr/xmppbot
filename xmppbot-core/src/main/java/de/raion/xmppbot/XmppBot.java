@@ -97,7 +97,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 	private BotConfiguration configuration;
 	
-	 ExecutorService executorService;
+	protected ExecutorService executorService;
 
 	
 
@@ -142,14 +142,14 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 			getContext().init();
 
-			Collection<XMPPConnection> connections = connectionMap.values();
+			Set<Map.Entry<String,XMPPConnection>> connections = connectionMap.entrySet();
 
 			Collection<AbstractMessageListenerPlugin> plugins = getContext().getPluginManager()
                                                                             .getEnabledPlugins()
                                                                             .values();
 			
-			for (XMPPConnection connection : connections) {
-				addPlugins(connection, plugins);
+			for (Map.Entry<String, XMPPConnection> connection : connections) {
+				addPlugins(connection.getKey(), connection.getValue(), plugins);
 			}
 		}
 		catch(Exception e) {
@@ -283,13 +283,13 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 	public <T> void pluginEnabled(String pluginName, AbstractMessageListenerPlugin<T> plugin) {
 		
-		Collection<XMPPConnection> connections = connectionMap.values();
+		Set<Map.Entry<String,XMPPConnection>> connections = connectionMap.entrySet();
 		
 		Collection<AbstractMessageListenerPlugin> plugins = new ArrayList<AbstractMessageListenerPlugin>(1);
 		plugins.add(plugin);
 		
-		for (XMPPConnection connection : connections) {
-			addPlugins(connection, plugins);
+		for (Map.Entry<String, XMPPConnection> connectionEntry : connections) {
+			addPlugins(connectionEntry.getKey(), connectionEntry.getValue(), plugins);
 		}
 	}
 
@@ -443,16 +443,18 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	}
 
 
-	private XMPPConnection addPlugins(XMPPConnection connection, Collection<AbstractMessageListenerPlugin> plugins) {
+	private XMPPConnection addPlugins(String connectionKey, XMPPConnection connection, Collection<AbstractMessageListenerPlugin> plugins) {
 
 		
 		// excluding messages from enbot himself :)
-		List<String> nickNameList = getOwnNickNames();
+		List<String> ignoreFromList = getOwnNickNames();
+        ignoreFromList.addAll(getIgnoreTokens(connectionKey));
 		List<NotFilter> notFromFilterList = new ArrayList<NotFilter>();
 
-		for (String nickName : nickNameList) {
-			FromContainsFilter fromFilter = new FromContainsFilter(nickName);
+		for (String fromName : ignoreFromList) {
+			FromContainsFilter fromFilter = new FromContainsFilter(fromName);
 			notFromFilterList.add(new NotFilter(fromFilter));
+            log.info("ignoring messages from '{}'", fromName);
 		}
 
 		for(AbstractMessageListenerPlugin plugin : plugins){
@@ -466,8 +468,13 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 		return connection;
 	}
 
+    private Collection<? extends String> getIgnoreTokens(String connectionKey) {
 
-	private List<String> getOwnNickNames() {
+        return getConfiguration().getConfigurations().get(connectionKey).getIgnoreMessagesFrom();
+    }
+
+
+    private List<String> getOwnNickNames() {
 		List<String> list = new ArrayList<String>();
 		Collection<XmppConfiguration> c = configuration.getConfigurations().values();
 		for (XmppConfiguration xmppConfiguration : c) {
@@ -511,7 +518,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 				}
 
 				muc.join(xmppConfig.getNickName(), xmppConfig.getPassword(), history,
-						SmackConfiguration.getPacketReplyTimeout());
+						 SmackConfiguration.getPacketReplyTimeout());
 				log.info("joined multiuserchat '{}' with address {}", mucAddress, muc.getRoom());
 
 				multiUserChatMap.put(mucAddress, muc);

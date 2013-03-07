@@ -19,6 +19,7 @@ package de.raion.xmppbot.config;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,21 +43,14 @@ public class XmppConfiguration {
 
 	private String password;
 
-
 	private String nickName;
-
-
 
 	private Map<String, String> multiUserChats = new HashMap<String,String>();
 
 	private Map<String, String> chats = new HashMap<String,String>();
 
-	//private List<MessageFilter> multiUserChatFilters = new ArrayList<MessageFilter>();
+    private ArrayList<String>  ignoreMessagesFrom = new ArrayList<String>();
 
-
-
-
-	
 
 
 	/**
@@ -207,27 +201,13 @@ public class XmppConfiguration {
 	}
 
 
-//
-//	/**
-//	 * filter getter method.
-//	 * @return the filter
-//	 */
-//	public List<MessageFilter> getMultiUserChatFilter() {
-//		return multiUserChatFilters;
-//	}
-//
-//	/**
-//	 * filter getter method.
-//	 * @return the filter
-//	 */
-//	public void setMultiUserChatFilter(List<MessageFilter> filter) {
-//		this.multiUserChatFilters = filter;
-//	}
-//
-//	public void addMultiUserChatFilter(MessageFilter filter) {
-//		this.multiUserChatFilters.add(filter);
-//
-//	}
+    public ArrayList<String> getIgnoreMessagesFrom() {
+        return ignoreMessagesFrom;
+    }
+
+    public void setIgnoreMessagesFrom(ArrayList<String> ignoreMessagesFrom) {
+        this.ignoreMessagesFrom = ignoreMessagesFrom;
+    }
 
 
 
