@@ -95,10 +95,11 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 	private ChatMessageListener messageHandler;
 	private Map<String, List<Class<PacketInterceptor>>> packetInterceptorMap;
 	private Map<String, Class<MultiUserChatListener>> multiUserChatListenerMap;
-
-	private BotConfiguration configuration;
-	
+    private BotConfiguration configuration;
+    private String fileName;
 	protected ExecutorService executorService;
+
+
 
 	
 
@@ -127,12 +128,14 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 
 	/**
 	 * initializes the bot with the given configuration
-	 * @param aConfig the configuration to use
-	 */
+     * @param aConfig the configuration to use
+     * @param name
+     */
 	@SuppressWarnings("unchecked")
-	public void init(BotConfiguration aConfig)  {
+	public void init(BotConfiguration aConfig, String aFileName)  {
 		try {
 			configuration = aConfig;
+            fileName = aFileName;
 
 			super._commands = loadCommands();
 
@@ -322,6 +325,8 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
     public String getConnectionKey(MultiUserChat multiuserChat) {
         return multiUserChatConnectionKeyMap.get(multiuserChat);
     }
+
+    public String getConfigFileName() { return fileName; }
 
 
 	/**
@@ -672,8 +677,8 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 		log.debug(config.toString());
 
 		log.info("initializing");
-		bot.init(config);
-		log.info("started");
+		bot.init(config, configFile.getName());
+       	log.info("started");
 		
 		//TODO better solution
 		while(true) {

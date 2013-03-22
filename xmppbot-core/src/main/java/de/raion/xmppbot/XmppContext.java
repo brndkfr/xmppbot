@@ -312,13 +312,20 @@ public class XmppContext extends CLIContext implements ScheduleExecutionListener
 	 */
 	public void saveConfig(Object config) throws IOException {
 
-		ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
 
 		String filename = config.getClass().getSimpleName().toLowerCase()+".json";
 
-		writer.writeValue(new File(filename), config);
+		saveConfig(config, filename);
 
 	}
+
+    public void saveConfig(Object config, String filename) throws IOException {
+
+        log.debug("saveConfig(config={}, filename={}", config.getClass().getSimpleName(), filename);
+        ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+        writer.writeValue(new File(filename), config);
+    }
+
 
 
 	/**

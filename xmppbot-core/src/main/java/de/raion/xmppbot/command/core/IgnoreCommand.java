@@ -34,7 +34,7 @@ public class IgnoreCommand extends AbstractXmppCommand{
            ignoreSet.addAll(tokenList);
            log.info(tokenList.toString());
            try {
-               context.saveConfig(context.getBot().getConfiguration());
+               context.saveConfig(context.getBot().getConfiguration(), context.getBot().getConfigFileName());
                println(tokenList.toString()+" added to ignore list");
            } catch (IOException e) {
                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
