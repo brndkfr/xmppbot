@@ -41,7 +41,7 @@ public class XmppContextTest {
 
 		//given
 		XmppBot mockBot = mock(XmppBot.class);
-		doNothing().when(mockBot).init(any(BotConfiguration.class), null);
+		doNothing().when(mockBot).init(any(BotConfiguration.class), any(String.class));
 
 		XmppContext context = new XmppContext(mockBot);
 
@@ -56,7 +56,7 @@ public class XmppContextTest {
 
 		//given
 		XmppBot mockBot = mock(XmppBot.class);
-		doNothing().when(mockBot).init(any(BotConfiguration.class), null);
+		doNothing().when(mockBot).init(any(BotConfiguration.class), any(String.class));
 
 		XmppContext context = new XmppContext(mockBot);
 		//when

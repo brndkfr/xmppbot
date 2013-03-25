@@ -329,6 +329,9 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
     public String getConfigFileName() { return fileName; }
 
 
+    public void ignoreMessagesFrom(List<String> tokenList) {
+    }
+
 	/**
 	 * Load the necessary commands for this application.
 	 *
@@ -476,6 +479,7 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 			andFilter.addFilter(plugin.getAcceptFilter());
 
 			connection.addPacketListener(plugin, andFilter);
+
 		}
 		return connection;
 	}
@@ -685,4 +689,6 @@ public class XmppBot extends CommandLineApplication implements ChatManagerListen
 			TimeUnit.HOURS.sleep(1);
 		}
 	}
+
+
 }

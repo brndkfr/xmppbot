@@ -2,6 +2,7 @@ package de.raion.xmppbot.command.core;
 
 
 import com.beust.jcommander.Parameter;
+import de.raion.xmppbot.XmppBot;
 import de.raion.xmppbot.XmppContext;
 import de.raion.xmppbot.config.XmppConfiguration;
 import net.dharwin.common.tools.cli.api.annotations.CLICommand;
@@ -32,6 +33,8 @@ public class IgnoreCommand extends AbstractXmppCommand{
            XmppConfiguration config = context.getConnectionConfiguration(context.getConnectionKey(context.getMultiUserChat()));
            Set<String> ignoreSet = config.getIgnoreMessagesFrom();
            ignoreSet.addAll(tokenList);
+           XmppBot bot = context.getBot();
+           bot.ignoreMessagesFrom(tokenList);
            log.info(tokenList.toString());
            try {
                context.saveConfig(context.getBot().getConfiguration(), context.getBot().getConfigFileName());
