@@ -22,6 +22,9 @@ package de.raion.xmppbot.command;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * @author Sandeep <ruhil@github>
+ */
 @SuppressWarnings("unused")
 public class TfsConfig {
     private String tfsHome;

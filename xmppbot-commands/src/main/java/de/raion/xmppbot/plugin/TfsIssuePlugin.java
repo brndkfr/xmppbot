@@ -43,6 +43,8 @@ import java.util.regex.Pattern;
 /**
  * Listen for messages with OneNote links and in reply post a nicely formatted HTML message with
  * links to web-view and one one-note URL for the link.
+ *
+ * @author Sandeep <ruhil@github>
  */
 @MessageListenerPlugin(name = "tfs-issue", description = "Parses messages and provide details " +
         "about posted TFS issues.")
@@ -60,13 +62,27 @@ public class TfsIssuePlugin extends AbstractMessageListenerPlugin<TfsIssuePlugin
      */
     public TfsIssuePlugin(XmppBot aXmppBot) {
         super(aXmppBot);
+        mapper = new ObjectMapper();
+        init();
+    }
+
+    /**
+     * Instantiates config related stuff.
+     */
+    private void init() {
         config = getContext().loadConfig(TfsConfig.class);
         acceptFilter = new MessageBodyMatchesFilter(config.getRegex());
         pattern = Pattern.compile(config.getRegex(), Pattern.CASE_INSENSITIVE);
         client = Client.create();
         HTTPBasicAuthFilter authFilter = new HTTPBasicAuthFilter(config.getUser(), config.getPassword());
         client.addFilter(authFilter);
-        mapper = new ObjectMapper();
+    }
+
+    /**
+     * reloads configuration
+     */
+    public void updateConfiguration() {
+        init();
     }
 
     @Override
