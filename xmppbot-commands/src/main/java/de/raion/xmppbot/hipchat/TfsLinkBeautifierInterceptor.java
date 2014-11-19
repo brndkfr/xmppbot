@@ -117,7 +117,7 @@ public class TfsLinkBeautifierInterceptor extends AbstractPacketInterceptor {
 
                         // this is a hack :(
                         xmppMessage.setBody(null);
-                        throw new IllegalArgumentException("JiraLinkBeautifier: preventing message sending via xmpp. message already sent via hipchat web api");
+                        throw new IllegalArgumentException("TfsLinkBeautifier: preventing message sending via xmpp. message already sent via hipchat web api");
                     } else {
                         log.warn("sending message for {} failed, status = {}", "[" + issueKey + "] to " + roomId, response.getStatus());
                         log.warn(response.getEntity(String.class));
