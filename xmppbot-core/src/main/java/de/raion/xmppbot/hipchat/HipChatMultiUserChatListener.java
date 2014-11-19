@@ -47,6 +47,8 @@ public class HipChatMultiUserChatListener extends AbstractMultiUserChatListener 
 
 	private MessageFilter acceptFilter;
 
+    private String nickName;
+
 	/**
 	 * @param reference
 	 * @param anAcceptFilter
@@ -75,7 +77,7 @@ public class HipChatMultiUserChatListener extends AbstractMultiUserChatListener 
 
 		BotConfiguration config = reference.getConfiguration();
 		XmppConfiguration xmppConfig = config.getConfigurations().get("hipchat");
-		String nickName = xmppConfig.getNickName().split(" ")[0];
+		nickName = xmppConfig.getNickName().split(" ")[0].toLowerCase();
 
 		return new MessageBodyContainsFilter("@"+nickName, true);
 	}
@@ -92,11 +94,11 @@ public class HipChatMultiUserChatListener extends AbstractMultiUserChatListener 
 		log.debug("Thread = " + Thread.currentThread().getName());
 		String body = message.getBody();
 
-		if (body.toLowerCase().contains("@enbot")) {
+		if (body.toLowerCase().contains("@"+nickName)) {
 
 			log.debug("body before filter: " + body);
 
-			body = body.toLowerCase().replace("@enbot", "");
+			body = body.toLowerCase().replace("@" + nickName, "");
 
 			log.debug("body after filter: " + body);
 
