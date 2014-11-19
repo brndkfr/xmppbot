@@ -41,9 +41,10 @@ public class EchoCommand extends AbstractXmppCommand{
 	@Override
 	public void executeCommand(XmppContext context) {
 
+        String concat = "";
 		for (String token : tokenList) {
-			print(token+" ");
+			concat = concat + " " + token;
 		}
-		println("");
+		print(concat);
 	}
 }
