@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
         "about posted commit hashes and reviews.")
 public class CruciblePlugin extends AbstractMessageListenerPlugin<CruciblePlugin> {
 
-    private static Logger log = LoggerFactory.getLogger(JiraIssuePlugin.class);
+    private static Logger log = LoggerFactory.getLogger(CruciblePlugin.class);
 
     private ObjectMapper mapper;
 
